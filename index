@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎸 Study Tracker</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU3R1ZHkgVHJhY2tlciIsInNob3J0X25hbWUiOiJTdHVkeVRyYWNrZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMyRDJEMkQiLCJ0aGVtZV9jb2xvciI6IiM0QTkwRTIiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpVMklpQm9aV2xuYUhROUlqSTFOaUlnZG1sbGQwSnZlRDBpTUNBd0lESTFOaUF5TlRZaUlHWnBiR3c5SWlNMFFUa3dSVElpUGp4eVpXTjBJSGRwWkhSb1BTSXlOVFlpSUdobGFXZG9kRDBpTWpVMklpQm1hV3hzUFNJall6QXpORGNpTHo0OGRHVjRkQ0I0UFNJeE1qZ2lJSGs5SWpFeU9DSWdabTl1ZEMxemFYcGxQU0l6TWlJZ1ptbHNiRDBpSXpabVptWm1abVl4SWo0dlBHUmxabk0rUEdkcFlYUmxjRzl1ZEVka1lXeDBZU0E5SWlReUlqNDhjM1J2Y0NCeGRHRnNkSFJwYkdVOUlqUWlJRzltWm5ObGRDMWpiMnh2Y2owanBIYzNaVGs4TDNOMGIzQStQQzluY21Ga2FXVnVkRkpsWmpBOElnPT0iLCJzaXplcyI6IjI1Nng1IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <style>
+        /* Dark theme like your Python app */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #2D2D2D;
+            color: #FFFFFF;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #1E1E1E;
+            border-radius: 12px;
+            border: 1px solid #4A4A4A;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+            color: #4A90E2;
+        }
+        
+        .card {
+            background: #3A3A3A;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #4A4A4A;
+        }
+        
+        .timer-display {
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            font-family: monospace;
+            color: #FFFFFF;
+        }
+        
+        .timer-display.running {
+            color: #28A745;
+        }
+        
+        .timer-display.paused {
+            color: #FFC107;
+        }
+        
+        .button {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+            transition: background-color 0.2s;
+        }
+        
+        .button:hover {
+            background: #357ABD;
+        }
+        
+        .button.success {
+            background: #28A745;
+        }
+        
+        .button.success:hover {
+            background: #218838;
+        }
+        
+        .button.danger {
+            background: #DC3545;
+        }
+        
+        .button.danger:hover {
+            background: #C82333;
+        }
+        
+        .button:disabled {
+            background: #6C757D;
+            cursor: not-allowed;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #CCCCCC;
+        }
+        
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #5A5A5A;
+            border-radius: 8px;
+            background: #4A4A4A;
+            color: #FFFFFF;
+            font-size: 16px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: #4A90E2;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .tab-navigation {
+            display: flex;
+            background: #1E1E1E;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            padding: 5px;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .tab.active {
+            background: #4A90E2;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .sessions-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .session-item {
+            background: #4A4A4A;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quick-practice {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .quick-btn {
+            padding: 8px;
+            background: #28A745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #28A745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .timer-display {
+                font-size: 36px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-indicator" id="statusIndicator">📱 Ready</div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>🎸 Study Tracker</h1>
+            <p>Practice Timer & Progress Tracker</p>
+        </div>
+        
+        <div class="tab-navigation">
+            <div class="tab active" onclick="switchTab('timer')">⏱️ Timer</div>
+            <div class="tab" onclick="switchTab('library')">🎵 Library</div>
+            <div class="tab" onclick="switchTab('stats')">📊 Stats</div>
+        </div>
+        
+        <!-- Timer Tab -->
+        <div id="timer-tab" class="tab-content active">
+            <div class="card">
+                <div class="timer-display" id="timerDisplay">00:00:00</div>
+                
+                <div class="input-group">
+                    <label for="practiceItem">What are you practicing?</label>
+                    <select id="practiceItem">
+                        <option value="">Select an item...</option>
+                    </select>
+                </div>
+                
+                <div class="quick-practice">
+                    <button class="quick-btn" onclick="quickPractice(5)">5m</button>
+                    <button class="quick-btn" onclick="quickPractice(10)">10m</button>
+                    <button class="quick-btn" onclick="quickPractice(15)">15m</button>
+                    <button class="quick-btn" onclick="quickPractice(30)">30m</button>
+                </div>
+                
+                <button class="button success" id="startBtn" onclick="toggleTimer()">▶️ Start</button>
+                <button class="button danger" id="stopBtn" onclick="stopTimer()" disabled>⏹️ Stop & Save</button>
+            </div>
+            
+            <div class="card">
+                <h3>📈 Today's Progress</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="todaySessions">0</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="todayTime">0m</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📝 Recent Sessions</h3>
+                <div class="sessions-list" id="sessionsList">
+                    <p style="text-align: center; color: #999;">No sessions yet. Start practicing!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Library Tab -->
+        <div id="library-tab" class="tab-content">
+            <div class="card">
+                <h3>➕ Add New Item</h3>
+                <div class="input-group">
+                    <label for="itemType">Type</label>
+                    <select id="itemType">
+                        <option value="song">🎵 Song</option>
+                        <option value="exercise">💪 Exercise</option>
+                        <option value="repertoire">⭐ Repertoire</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="itemName">Name</label>
+                    <input type="text" id="itemName" placeholder="Enter name...">
+                </div>
+                <div class="input-group">
+                    <label for="itemArtist">Artist (optional)</label>
+                    <input type="text" id="itemArtist" placeholder="Enter artist...">
+                </div>
+                <button class="button success" onclick="addItem()">Add Item</button>
+            </div>
+            
+            <div class="card">
+                <h3>📚 Your Library</h3>
+                <div id="libraryList">
+                    <p style="text-align: center; color: #999;">No items yet. Add some above!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Stats Tab -->
+        <div id="stats-tab" class="tab-content">
+            <div class="card">
+                <h3>📊 All Time Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label">Total Sessions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTime">0h 0m</div>
+                        <div class="stat-label">Total Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="averageSession">0m</div>
+                        <div class="stat-label">Avg Session</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="longestSession">0m</div>
+                        <div class="stat-label">Longest Session</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🏆 Most Practiced</h3>
+                <div id="topPracticed">
+                    <p style="text-align: center; color: #999;">No practice data yet.</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📤 Export Data</h3>
+                <button class="button" onclick="exportData()">📂 Download Practice Data</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Study Tracker PWA - Complete functionality in one file
+        class StudyTrackerPWA {
+            constructor() {
+                this.timer = null;
+                this.startTime = null;
+                this.elapsedTime = 0;
+                this.isRunning = false;
+                this.isPaused = false;
+                
+                this.initDB();
+                this.loadData();
+                this.updateDisplay();
+                this.updateStats();
+                
+                // Register service worker for PWA
+                if ('serviceWorker' in navigator) {
+                    this.registerServiceWorker();
+                }
+            }
+            
+            async initDB() {
+                // Using localStorage for simplicity - could upgrade to IndexedDB
+                if (!localStorage.getItem('studyTracker_songs')) {
+                    localStorage.setItem('studyTracker_songs', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('studyTracker_exercises')) {
+                    localStorage.setItem('studyTracker_exercises', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('studyTracker_repertoire')) {
+                    localStorage.setItem('studyTracker_repertoire', JSON.stringify([]));
+                }
+                if (!localStorage.getItem('studyTracker_sessions')) {
+                    localStorage.setItem('studyTracker_sessions', JSON.stringify([]));
+                }
+            }
+            
+            loadData() {
+                this.songs = JSON.parse(localStorage.getItem('studyTracker_songs') || '[]');
+                this.exercises = JSON.parse(localStorage.getItem('studyTracker_exercises') || '[]');
+                this.repertoire = JSON.parse(localStorage.getItem('studyTracker_repertoire') || '[]');
+                this.sessions = JSON.parse(localStorage.getItem('studyTracker_sessions') || '[]');
+                
+                this.updatePracticeDropdown();
+                this.updateLibraryDisplay();
+            }
+            
+            saveData() {
+                localStorage.setItem('studyTracker_songs', JSON.stringify(this.songs));
+                localStorage.setItem('studyTracker_exercises', JSON.stringify(this.exercises));
+                localStorage.setItem('studyTracker_repertoire', JSON.stringify(this.repertoire));
+                localStorage.setItem('studyTracker_sessions', JSON.stringify(this.sessions));
+            }
+            
+            updatePracticeDropdown() {
+                const select = document.getElementById('practiceItem');
+                select.innerHTML = '<option value="">Select an item...</option>';
+                
+                this.songs.forEach(song => {
+                    const option = document.createElement('option');
+                    option.value = `Song: ${song.name}`;
+                    option.textContent = `🎵 ${song.name}${song.artist ? ' - ' + song.artist : ''}`;
+                    select.appendChild(option);
+                });
+                
+                this.exercises.forEach(exercise => {
+                    const option = document.createElement('option');
+                    option.value = `Exercise: ${exercise.name}`;
+                    option.textContent = `💪 ${exercise.name}`;
+                    select.appendChild(option);
+                });
+                
+                this.repertoire.forEach(rep => {
+                    const option = document.createElement('option');
+                    option.value = `Repertoire: ${rep.name}`;
+                    option.textContent = `⭐ ${rep.name}`;
+                    select.appendChild(option);
+                });
+            }
+            
+            updateLibraryDisplay() {
+                const libraryList = document.getElementById('libraryList');
+                libraryList.innerHTML = '';
+                
+                if (this.songs.length === 0 && this.exercises.length === 0 && this.repertoire.length === 0) {
+                    libraryList.innerHTML = '<p style="text-align: center; color: #999;">No items yet. Add some above!</p>';
+                    return;
+                }
+                
+                [...this.songs, ...this.exercises, ...this.repertoire].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'session-item';
+                    
+                    const icon = this.songs.includes(item) ? '🎵' : 
+                               this.exercises.includes(item) ? '💪' : '⭐';
+                    
+                    itemDiv.innerHTML = `
+                        <div>
+                            <strong>${icon} ${item.name}</strong>
+                            ${item.artist ? `<br><small>${item.artist}</small>` : ''}
+                        </div>
+                        <div>
+                            <small>${this.getPracticeCount(item.name)} sessions</small>
+                        </div>
+                    `;
+                    libraryList.appendChild(itemDiv);
+                });
+            }
+            
+            getPracticeCount(itemName) {
+                return this.sessions.filter(session => 
+                    session.item.includes(itemName)
+                ).length;
+            }
+            
+            addItem() {
+                const type = document.getElementById('itemType').value;
+                const name = document.getElementById('itemName').value.trim();
+                const artist = document.getElementById('itemArtist').value.trim();
+                
+                if (!name) {
+                    alert('Please enter a name!');
+                    return;
+                }
+                
+                const item = {
+                    name: name,
+                    artist: artist,
+                    added_date: new Date().toISOString(),
+                    practice_count: 0
+                };
+                
+                if (type === 'song') {
+                    this.songs.push(item);
+                } else if (type === 'exercise') {
+                    this.exercises.push(item);
+                } else if (type === 'repertoire') {
+                    this.repertoire.push(item);
+                }
+                
+                this.saveData();
+                this.updatePracticeDropdown();
+                this.updateLibraryDisplay();
+                
+                // Clear form
+                document.getElementById('itemName').value = '';
+                document.getElementById('itemArtist').value = '';
+                
+                this.showStatus('✅ Item added successfully!');
+            }
+            
+            startTimer() {
+                if (!this.isPaused) {
+                    this.elapsedTime = 0;
+                }
+                
+                this.startTime = Date.now() - this.elapsedTime;
+                this.isRunning = true;
+                this.isPaused = false;
+                
+                this.timer = setInterval(() => {
+                    this.elapsedTime = Date.now() - this.startTime;
+                    this.updateDisplay();
+                }, 1000);
+                
+                this.updateButtonStates();
+                this.showStatus('⏱️ Timer started');
+            }
+            
+            pauseTimer() {
+                clearInterval(this.timer);
+                this.isRunning = false;
+                this.isPaused = true;
+                this.updateButtonStates();
+                this.showStatus('⏸️ Timer paused');
+            }
+            
+            stopTimer() {
+                clearInterval(this.timer);
+                
+                if (this.elapsedTime > 60000) { // Only save if > 1 minute
+                    this.saveSession();
+                }
+                
+                this.resetTimer();
+                this.updateStats();
+                this.showStatus('⏹️ Session saved');
+            }
+            
+            resetTimer() {
+                this.elapsedTime = 0;
+                this.isRunning = false;
+                this.isPaused = false;
+                this.updateDisplay();
+                this.updateButtonStates();
+            }
+            
+            saveSession() {
+                const selectedItem = document.getElementById('practiceItem').value;
+                if (!selectedItem) {
+                    alert('Please select what you practiced!');
+                    return;
+                }
+                
+                const session = {
+                    item: selectedItem,
+                    duration: Math.floor(this.elapsedTime / 1000), // seconds
+                    date: new Date().toISOString(),
+                    type: selectedItem.split(':')[0].toLowerCase()
+                };
+                
+                this.sessions.push(session);
+                this.saveData();
+                this.updateSessionsList();
+            }
+            
+            quickPractice(minutes) {
+                const selectedItem = document.getElementById('practiceItem').value;
+                if (!selectedItem) {
+                    alert('Please select what you practiced!');
+                    return;
+                }
+                
+                const session = {
+                    item: selectedItem,
+                    duration: minutes * 60, // convert to seconds
+                    date: new Date().toISOString(),
+                    type: selectedItem.split(':')[0].toLowerCase()
+                };
+                
+                this.sessions.push(session);
+                this.saveData();
+                this.updateSessionsList();
+                this.updateStats();
+                this.showStatus(`✅ ${minutes}m session added!`);
+            }
+            
+            updateDisplay() {
+                const display = document.getElementById('timerDisplay');
+                const time = this.formatTime(Math.floor(this.elapsedTime / 1000));
+                display.textContent = time;
+                
+                display.className = 'timer-display';
+                if (this.isRunning) {
+                    display.classList.add('running');
+                } else if (this.isPaused) {
+                    display.classList.add('paused');
+                }
+            }
+            
+            updateButtonStates() {
+                const startBtn = document.getElementById('startBtn');
+                const stopBtn = document.getElementById('stopBtn');
+                
+                if (this.isRunning) {
+                    startBtn.textContent = '⏸️ Pause';
+                    startBtn.onclick = () => this.pauseTimer();
+                    stopBtn.disabled = false;
+                } else if (this.isPaused) {
+                    startBtn.textContent = '▶️ Resume';
+                    startBtn.onclick = () => this.startTimer();
+                    stopBtn.disabled = false;
+                } else {
+                    startBtn.textContent = '▶️ Start';
+                    startBtn.onclick = () => this.startTimer();
+                    stopBtn.disabled = true;
+                }
+            }
+            
+            updateSessionsList() {
+                const sessionsList = document.getElementById('sessionsList');
+                sessionsList.innerHTML = '';
+                
+                if (this.sessions.length === 0) {
+                    sessionsList.innerHTML = '<p style="text-align: center; color: #999;">No sessions yet. Start practicing!</p>';
+                    return;
+                }
+                
+                const recentSessions = this.sessions
+                    .slice(-10)
+                    .reverse();
+                
+                recentSessions.forEach(session => {
+                    const sessionDiv = document.createElement('div');
+                    sessionDiv.className = 'session-item';
+                    
+                    const date = new Date(session.date);
+                    const timeStr = this.formatTime(session.duration);
+                    
+                    sessionDiv.innerHTML = `
+                        <div>
+                            <strong>${session.item}</strong>
+                            <br><small>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</small>
+                        </div>
+                        <div><strong>${timeStr}</strong></div>
+                    `;
+                    sessionsList.appendChild(sessionDiv);
+                });
+            }
+            
+            updateStats() {
+                this.updateTodayStats();
+                this.updateAllTimeStats();
+                this.updateTopPracticed();
+            }
+            
+            updateTodayStats() {
+                const today = new Date().toDateString();
+                const todaySessions = this.sessions.filter(session => 
+                    new Date(session.date).toDateString() === today
+                );
+                
+                const todayTime = todaySessions.reduce((total, session) => 
+                    total + session.duration, 0
+                );
+                
+                document.getElementById('todaySessions').textContent = todaySessions.length;
+                document.getElementById('todayTime').textContent = Math.floor(todayTime / 60) + 'm';
+            }
+            
+            updateAllTimeStats() {
+                const totalSessions = this.sessions.length;
+                const totalTime = this.sessions.reduce((total, session) => 
+                    total + session.duration, 0
+                );
+                const avgSession = totalSessions > 0 ? totalTime / totalSessions : 0;
+                const longestSession = this.sessions.length > 0 ? 
+                    Math.max(...this.sessions.map(s => s.duration)) : 0;
+                
+                document.getElementById('totalSessions').textContent = totalSessions;
+                document.getElementById('totalTime').textContent = 
+                    Math.floor(totalTime / 3600) + 'h ' + Math.floor((totalTime % 3600) / 60) + 'm';
+                document.getElementById('averageSession').textContent = Math.floor(avgSession / 60) + 'm';
+                document.getElementById('longestSession').textContent = Math.floor(longestSession / 60) + 'm';
+            }
+            
+            updateTopPracticed() {
+                const itemCounts = {};
+                this.sessions.forEach(session => {
+                    itemCounts[session.item] = (itemCounts[session.item] || 0) + session.duration;
+                });
+                
+                const topItems = Object.entries(itemCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
+                
+                const topPracticed = document.getElementById('topPracticed');
+                topPracticed.innerHTML = '';
+                
+                if (topItems.length === 0) {
+                    topPracticed.innerHTML = '<p style="text-align: center; color: #999;">No practice data yet.</p>';
+                    return;
+                }
+                
+                topItems.forEach(([item, duration], index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'session-item';
+                    
+                    const medal = ['🥇', '🥈', '🥉'][index] || '🏆';
+                    
+                    itemDiv.innerHTML = `
+                        <div><strong>${medal} ${item}</strong></div>
+                        <div><strong>${this.formatTime(duration)}</strong></div>
+                    `;
+                    topPracticed.appendChild(itemDiv);
+                });
+            }
+            
+            formatTime(seconds) {
+                const hrs = Math.floor(seconds / 3600);
+                const mins = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                
+                if (hrs > 0) {
+                    return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                } else {
+                    return `${mins}:${secs.toString().padStart(2, '0')}`;
+                }
+            }
+            
+            exportData() {
+                const data = {
+                    songs: this.songs,
+                    exercises: this.exercises,
+                    repertoire: this.repertoire,
+                    sessions: this.sessions,
+                    exported_date: new Date().toISOString()
+                };
+                
+                const blob = new Blob([JSON.stringify(data, null, 2)], 
+                    { type: 'application/json' });
+                
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `study_tracker_export_${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                this.showStatus('📂 Data exported successfully!');
+            }
+            
+            showStatus(message) {
+                const indicator = document.getElementById('statusIndicator');
+                indicator.textContent = message;
+                
+                setTimeout(() => {
+                    indicator.textContent = '📱 Ready';
+                }, 3000);
+            }
+            
+            registerServiceWorker() {
+                const swCode = `
+                    const CACHE_NAME = 'study-tracker-v1';
+                    const urlsToCache = ['/'];
+                    
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME)
+                                .then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+                    
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request)
+                                .then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(swUrl)
+                    .then(() => console.log('PWA: Service Worker registered'))
+                    .catch(err => console.log('PWA: Service Worker registration failed'));
+            }
+        }
+        
+        // Global functions for UI interaction
+        let app;
+        
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Highlight selected tab button
+            event.target.classList.add('active');
+            
+            // Update data when switching to stats
+            if (tabName === 'stats') {
+                app.updateStats();
+            }
+        }
+        
+        function toggleTimer() {
+            const selectedItem = document.getElementById('practiceItem').value;
+            
+            if (!app.isRunning && !app.isPaused && !selectedItem) {
+                alert('Please select what you want to practice first!');
+                return;
+            }
+            
+            if (app.isRunning) {
+                app.pauseTimer();
+            } else {
+                app.startTimer();
+            }
+        }
+        
+        function stopTimer() {
+            app.stopTimer();
+        }
+        
+        function quickPractice(minutes) {
+            app.quickPractice(minutes);
+        }
+        
+        function addItem() {
+            app.addItem();
+        }
+        
+        function exportData() {
+            app.exportData();
+        }
+        
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new StudyTrackerPWA();
+            app.updateSessionsList();
+            
+            // Add install prompt for PWA
+            let deferredPrompt;
+            
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                
+                // Show install button
+                const installBtn = document.createElement('button');
+                installBtn.textContent = '📱 Install App';
+                installBtn.className = 'button';
+                installBtn.style.position = 'fixed';
+                installBtn.style.bottom = '20px';
+                installBtn.style.right = '20px';
+                installBtn.style.zIndex = '1001';
+                
+                installBtn.onclick = async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        if (outcome === 'accepted') {
+                            app.showStatus('📱 App installed successfully!');
+                            installBtn.remove();
+                        }
+                        deferredPrompt = null;
+                    }
+                };
+                
+                document.body.appendChild(installBtn);
+                
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    if (installBtn.parentNode) {
+                        installBtn.remove();
+                    }
+                }, 10000);
+            });
+            
+            // Handle app installation
+            window.addEventListener('appinstalled', () => {
+                app.showStatus('🎉 App installed! You can now use it offline.');
+            });
+        });
+        
+        // Handle visibility change for timer
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && app && app.isRunning) {
+                app.showStatus('⏱️ Timer running in background');
+            }
+        });
+        
+        // Prevent zoom on double tap (iOS)
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function (event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+        
+        // Add some sample data for demo (remove in production)
+        function addSampleData() {
+            if (localStorage.getItem('studyTracker_hasData') !== 'true') {
+                const sampleSongs = [
+                    { name: "Hotel California", artist: "Eagles", added_date: new Date().toISOString(), practice_count: 0 },
+                    { name: "Stairway to Heaven", artist: "Led Zeppelin", added_date: new Date().toISOString(), practice_count: 0 }
+                ];
+                
+                const sampleExercises = [
+                    { name: "Chromatic Scale", artist: "", added_date: new Date().toISOString(), practice_count: 0 },
+                    { name: "Finger Independence", artist: "", added_date: new Date().toISOString(), practice_count: 0 }
+                ];
+                
+                localStorage.setItem('studyTracker_songs', JSON.stringify(sampleSongs));
+                localStorage.setItem('studyTracker_exercises', JSON.stringify(sampleExercises));
+                localStorage.setItem('studyTracker_hasData', 'true');
+            }
+        }
+        
+        // Uncomment next line to add sample data on first load
+        // addSampleData();
+    </script>
+</body>
+</html>
