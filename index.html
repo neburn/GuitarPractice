@@ -3,929 +3,694 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎸 Study Tracker</title>
-    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiU3R1ZHkgVHJhY2tlciIsInNob3J0X25hbWUiOiJTdHVkeVRyYWNrZXIiLCJzdGFydF91cmwiOiIuLyIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMyRDJEMkQiLCJ0aGVtZV9jb2xvciI6IiM0QTkwRTIiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTWpVMklpQm9aV2xuYUhROUlqSTFOaUlnZG1sbGQwSnZlRDBpTUNBd0lESTFOaUF5TlRZaUlHWnBiR3c5SWlNMFFUa3dSVElpUGp4eVpXTjBJSGRwWkhSb1BTSXlOVFlpSUdobGFXZG9kRDBpTWpVMklpQm1hV3hzUFNJall6QXpORGNpTHo0OGRHVjRkQ0I0UFNJeE1qZ2lJSGs5SWpFeU9DSWdabTl1ZEMxemFYcGxQU0l6TWlJZ1ptbHNiRDBpSXpabVptWm1abVl4SWo0dlBHUmxabk0rUEdkcFlYUmxjRzl1ZEVka1lXeDBZU0E5SWlReUlqNDhjM1J2Y0NCeGRHRnNkSFJwYkdVOUlqUWlJRzltWm5ObGRDMWpiMnh2Y2owanBIYzNaVGs4TDNOMGIzQStQQzluY21Ga2FXVnVkRkpsWmpBOElnPT0iLCJzaXplcyI6IjI1Nng1IiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    <title>🎸 Guitar Practice Tracker</title>
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#4A90E2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Guitar Practice">
     
-    <style>
-        /* Dark theme like your Python app */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #2D2D2D;
-            color: #FFFFFF;
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 10px;
-        }
-        
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #1E1E1E;
-            border-radius: 12px;
-            border: 1px solid #4A4A4A;
-        }
-        
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: #4A90E2;
-        }
-        
-        .card {
-            background: #3A3A3A;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #4A4A4A;
-        }
-        
-        .timer-display {
-            font-size: 48px;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-            font-family: monospace;
-            color: #FFFFFF;
-        }
-        
-        .timer-display.running {
-            color: #28A745;
-        }
-        
-        .timer-display.paused {
-            color: #FFC107;
-        }
-        
-        .button {
-            background: #4A90E2;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            width: 100%;
-            margin: 5px 0;
-            transition: background-color 0.2s;
-        }
-        
-        .button:hover {
-            background: #357ABD;
-        }
-        
-        .button.success {
-            background: #28A745;
-        }
-        
-        .button.success:hover {
-            background: #218838;
-        }
-        
-        .button.danger {
-            background: #DC3545;
-        }
-        
-        .button.danger:hover {
-            background: #C82333;
-        }
-        
-        .button:disabled {
-            background: #6C757D;
-            cursor: not-allowed;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #CCCCCC;
-        }
-        
-        .input-group input, .input-group select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #5A5A5A;
-            border-radius: 8px;
-            background: #4A4A4A;
-            color: #FFFFFF;
-            font-size: 16px;
-        }
-        
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: #4A90E2;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-        
-        .tab-navigation {
-            display: flex;
-            background: #1E1E1E;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            padding: 5px;
-        }
-        
-        .tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        
-        .tab.active {
-            background: #4A90E2;
-            color: white;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .sessions-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .session-item {
-            background: #4A4A4A;
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .quick-practice {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .quick-btn {
-            padding: 8px;
-            background: #28A745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        .status-indicator {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background: #28A745;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            z-index: 1000;
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .timer-display {
-                font-size: 36px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dark-theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIGZpbGw9IiM0QTkwRTIiPjxyZWN0IHdpZHRoPSIyNTYiIGhlaWdodD0iMjU2IiBmaWxsPSIjMzAzNDciLz48dGV4dCB4PSIxMjgiIHk9IjEyOCIgZm9udC1zaXplPSIzMiIgZmlsbD0iIzZmZmZmZmZmIj7wn46YPC90ZXh0Pjwvc3ZnPg==">
 </head>
 <body>
-    <div class="status-indicator" id="statusIndicator">📱 Ready</div>
-    
-    <div class="container">
-        <div class="header">
-            <h1>🎸 Study Tracker</h1>
-            <p>Practice Timer & Progress Tracker</p>
-        </div>
-        
-        <div class="tab-navigation">
-            <div class="tab active" onclick="switchTab('timer')">⏱️ Timer</div>
-            <div class="tab" onclick="switchTab('library')">🎵 Library</div>
-            <div class="tab" onclick="switchTab('stats')">📊 Stats</div>
-        </div>
-        
-        <!-- Timer Tab -->
-        <div id="timer-tab" class="tab-content active">
-            <div class="card">
-                <div class="timer-display" id="timerDisplay">00:00:00</div>
-                
-                <div class="input-group">
-                    <label for="practiceItem">What are you practicing?</label>
-                    <select id="practiceItem">
-                        <option value="">Select an item...</option>
-                    </select>
-                </div>
-                
-                <div class="quick-practice">
-                    <button class="quick-btn" onclick="quickPractice(5)">5m</button>
-                    <button class="quick-btn" onclick="quickPractice(10)">10m</button>
-                    <button class="quick-btn" onclick="quickPractice(15)">15m</button>
-                    <button class="quick-btn" onclick="quickPractice(30)">30m</button>
-                </div>
-                
-                <button class="button success" id="startBtn" onclick="toggleTimer()">▶️ Start</button>
-                <button class="button danger" id="stopBtn" onclick="stopTimer()" disabled>⏹️ Stop & Save</button>
-            </div>
-            
-            <div class="card">
-                <h3>📈 Today's Progress</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="todaySessions">0</div>
-                        <div class="stat-label">Sessions</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="todayTime">0m</div>
-                        <div class="stat-label">Total Time</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>📝 Recent Sessions</h3>
-                <div class="sessions-list" id="sessionsList">
-                    <p style="text-align: center; color: #999;">No sessions yet. Start practicing!</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Library Tab -->
-        <div id="library-tab" class="tab-content">
-            <div class="card">
-                <h3>➕ Add New Item</h3>
-                <div class="input-group">
-                    <label for="itemType">Type</label>
-                    <select id="itemType">
-                        <option value="song">🎵 Song</option>
-                        <option value="exercise">💪 Exercise</option>
-                        <option value="repertoire">⭐ Repertoire</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="itemName">Name</label>
-                    <input type="text" id="itemName" placeholder="Enter name...">
-                </div>
-                <div class="input-group">
-                    <label for="itemArtist">Artist (optional)</label>
-                    <input type="text" id="itemArtist" placeholder="Enter artist...">
-                </div>
-                <button class="button success" onclick="addItem()">Add Item</button>
-            </div>
-            
-            <div class="card">
-                <h3>📚 Your Library</h3>
-                <div id="libraryList">
-                    <p style="text-align: center; color: #999;">No items yet. Add some above!</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Stats Tab -->
-        <div id="stats-tab" class="tab-content">
-            <div class="card">
-                <h3>📊 All Time Statistics</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalSessions">0</div>
-                        <div class="stat-label">Total Sessions</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalTime">0h 0m</div>
-                        <div class="stat-label">Total Time</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="averageSession">0m</div>
-                        <div class="stat-label">Avg Session</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="longestSession">0m</div>
-                        <div class="stat-label">Longest Session</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>🏆 Most Practiced</h3>
-                <div id="topPracticed">
-                    <p style="text-align: center; color: #999;">No practice data yet.</p>
-                </div>
-            </div>
-            
-            <div class="card">
-                <h3>📤 Export Data</h3>
-                <button class="button" onclick="exportData()">📂 Download Practice Data</button>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-icon">🎸</div>
+            <div class="loading-text">Loading Guitar Practice Tracker...</div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
             </div>
         </div>
     </div>
 
+    <!-- Status Indicator -->
+    <div id="statusIndicator" class="status-indicator">📱 Ready</div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app" style="display: none;">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-title">
+                    <span class="app-icon">🎸</span>
+                    <div class="title-text">
+                        <h1><span class="title-tune">tune</span><span class="title-upgrade">UPGRADE</span></h1>
+                        <p class="subtitle">Guitar Practice Tracker</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" id="themeToggle" title="Toggle Theme">
+                        <span class="icon">🌙</span>
+                    </button>
+                    <button class="btn-icon" id="settingsBtn" title="Settings">
+                        <span class="icon">⚙️</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="tab-navigation">
+            <button class="tab-button active" data-tab="dashboard">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-text">Dashboard</span>
+            </button>
+            <button class="tab-button" data-tab="timer">
+                <span class="tab-icon">⏱️</span>
+                <span class="tab-text">Timer</span>
+            </button>
+            <button class="tab-button" data-tab="library">
+                <span class="tab-icon">🎵</span>
+                <span class="tab-text">Library</span>
+            </button>
+            <button class="tab-button" data-tab="statistics">
+                <span class="tab-icon">📊</span>
+                <span class="tab-text">Stats</span>
+            </button>
+            <button class="tab-button" data-tab="achievements">
+                <span class="tab-icon">🏆</span>
+                <span class="tab-text">Goals</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Tab -->
+            <section id="dashboard-tab" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- Quick Stats -->
+                    <div class="card stats-card">
+                        <div class="card-header">
+                            <h3>📈 Today's Practice</h3>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value" id="todaySessions">0</div>
+                                <div class="stat-label">Sessions</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="todayTime">0m</div>
+                                <div class="stat-label">Time</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="currentStreak">0</div>
+                                <div class="stat-label">Day Streak</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value" id="goalProgress">0%</div>
+                                <div class="stat-label">Goal</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Practice -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚡ Quick Practice</h3>
+                        </div>
+                        <div class="quick-practice-grid">
+                            <button class="quick-btn" data-minutes="5">5m</button>
+                            <button class="quick-btn" data-minutes="10">10m</button>
+                            <button class="quick-btn" data-minutes="15">15m</button>
+                            <button class="quick-btn" data-minutes="30">30m</button>
+                        </div>
+                        <div class="input-group">
+                            <select id="quickPracticeItem" class="form-select">
+                                <option value="">Select what to practice...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Recent Sessions -->
+                    <div class="card recent-sessions">
+                        <div class="card-header">
+                            <h3>📝 Recent Sessions</h3>
+                            <button class="btn-link" id="viewAllSessions">View All</button>
+                        </div>
+                        <div class="sessions-list" id="recentSessionsList">
+                            <div class="empty-state">
+                                <span class="empty-icon">🎯</span>
+                                <p>No sessions yet. Start practicing!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Goal -->
+                    <div class="card goal-card">
+                        <div class="card-header">
+                            <h3>🎯 Daily Goal</h3>
+                            <button class="btn-link" id="editGoal">Edit</button>
+                        </div>
+                        <div class="goal-content">
+                            <div class="goal-progress">
+                                <div class="progress-circle">
+                                    <svg class="progress-ring" width="80" height="80">
+                                        <circle class="progress-ring-background" cx="40" cy="40" r="35"></circle>
+                                        <circle class="progress-ring-progress" cx="40" cy="40" r="35" id="goalProgressRing"></circle>
+                                    </svg>
+                                    <div class="progress-text" id="goalProgressText">0%</div>
+                                </div>
+                            </div>
+                            <div class="goal-info">
+                                <div class="goal-target" id="goalTarget">60 minutes</div>
+                                <div class="goal-remaining" id="goalRemaining">60 minutes remaining</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Timer Tab -->
+            <section id="timer-tab" class="tab-content">
+                <div class="timer-layout">
+                    <!-- Main Timer Card -->
+                    <div class="card timer-card">
+                        <div class="card-header">
+                            <h3>⏱️ Practice Timer</h3>
+                            <div class="timer-status" id="timerStatus">Ready</div>
+                        </div>
+                        
+                        <!-- Timer Display -->
+                        <div class="timer-display-container">
+                            <div class="timer-display" id="timerDisplay">00:00:00</div>
+                            <div class="timer-subtitle" id="timerSubtitle">Ready to start</div>
+                        </div>
+
+                        <!-- Practice Item Selection -->
+                        <div class="input-group">
+                            <label for="practiceItem">What are you practicing?</label>
+                            <select id="practiceItem" class="form-select">
+                                <option value="">Select an item...</option>
+                            </select>
+                        </div>
+
+                        <!-- Timer Controls -->
+                        <div class="timer-controls">
+                            <button class="btn btn-success" id="startBtn">
+                                <span class="btn-icon">▶️</span>
+                                <span class="btn-text">Start</span>
+                            </button>
+                            <button class="btn btn-warning" id="pauseBtn" disabled>
+                                <span class="btn-icon">⏸️</span>
+                                <span class="btn-text">Pause</span>
+                            </button>
+                            <button class="btn btn-danger" id="stopBtn" disabled>
+                                <span class="btn-icon">⏹️</span>
+                                <span class="btn-text">Stop</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Session Notes -->
+                    <div class="card notes-card">
+                        <div class="card-header">
+                            <h3>📝 Session Notes</h3>
+                        </div>
+                        <div class="notes-content">
+                            <textarea id="sessionNotes" class="form-textarea" 
+                                placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Auto Break Settings -->
+                    <div class="card autobreak-card">
+                        <div class="card-header">
+                            <h3>☕ Auto Break</h3>
+                            <div class="toggle-switch">
+                                <input type="checkbox" id="autoBreakToggle" class="toggle-input">
+                                <label for="autoBreakToggle" class="toggle-label"></label>
+                            </div>
+                        </div>
+                        <div class="autobreak-settings" id="autoBreakSettings">
+                            <div class="settings-row">
+                                <div class="input-group">
+                                    <label for="breakInterval">Every</label>
+                                    <input type="number" id="breakInterval" class="form-input" value="25" min="5" max="120">
+                                    <span class="input-suffix">minutes</span>
+                                </div>
+                                <div class="input-group">
+                                    <label for="breakDuration">For</label>
+                                    <input type="number" id="breakDuration" class="form-input" value="5" min="1" max="30">
+                                    <span class="input-suffix">minutes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Library Tab -->
+            <section id="library-tab" class="tab-content">
+                <div class="library-layout">
+                    <!-- Library Navigation -->
+                    <div class="library-nav">
+                        <button class="library-tab-btn active" data-type="songs">
+                            <span class="icon">🎵</span>
+                            <span class="text">Songs</span>
+                            <span class="count" id="songsCount">0</span>
+                        </button>
+                        <button class="library-tab-btn" data-type="exercises">
+                            <span class="icon">💪</span>
+                            <span class="text">Exercises</span>
+                            <span class="count" id="exercisesCount">0</span>
+                        </button>
+                        <button class="library-tab-btn" data-type="repertoire">
+                            <span class="icon">⭐</span>
+                            <span class="text">Repertoire</span>
+                            <span class="count" id="repertoireCount">0</span>
+                        </button>
+                        <button class="library-tab-btn" data-type="routines">
+                            <span class="icon">📋</span>
+                            <span class="text">Routines</span>
+                            <span class="count" id="routinesCount">0</span>
+                        </button>
+                    </div>
+
+                    <!-- Add New Item -->
+                    <div class="card add-item-card">
+                        <div class="card-header">
+                            <h3 id="addItemTitle">➕ Add New Song</h3>
+                        </div>
+                        <form id="addItemForm" class="add-item-form">
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="itemName">Name *</label>
+                                    <input type="text" id="itemName" class="form-input" required>
+                                </div>
+                                <div class="input-group" id="artistGroup">
+                                    <label for="itemArtist">Artist</label>
+                                    <input type="text" id="itemArtist" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="itemTags">Tags</label>
+                                    <input type="text" id="itemTags" class="form-input" 
+                                        placeholder="e.g., blues, fingerpicking, beginner">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="itemBook">Book/Source</label>
+                                    <input type="text" id="itemBook" class="form-input">
+                                </div>
+                                <div class="input-group">
+                                    <label for="itemPage">Page</label>
+                                    <input type="text" id="itemPage" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="itemLink">Link</label>
+                                    <input type="url" id="itemLink" class="form-input" 
+                                        placeholder="https://...">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="input-group">
+                                    <label for="itemNotes">Notes</label>
+                                    <textarea id="itemNotes" class="form-textarea" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success">
+                                    <span class="btn-icon">➕</span>
+                                    <span class="btn-text" id="addBtnText">Add Song</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Items List -->
+                    <div class="card items-list-card">
+                        <div class="card-header">
+                            <h3 id="itemsListTitle">🎵 Your Songs</h3>
+                            <div class="list-actions">
+                                <input type="search" id="itemsSearch" class="search-input" placeholder="Search...">
+                                <select id="itemsSort" class="form-select">
+                                    <option value="name">Sort by Name</option>
+                                    <option value="artist">Sort by Artist</option>
+                                    <option value="date">Sort by Date</option>
+                                    <option value="practice">Sort by Practice Count</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="items-list" id="itemsList">
+                            <div class="empty-state">
+                                <span class="empty-icon">🎵</span>
+                                <p>No songs yet. Add your first song above!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Statistics Tab -->
+            <section id="statistics-tab" class="tab-content">
+                <div class="statistics-layout">
+                    <!-- Overview Stats -->
+                    <div class="card overview-stats">
+                        <div class="card-header">
+                            <h3>📊 Practice Overview</h3>
+                            <select id="statsTimeframe" class="form-select">
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                        <div class="overview-grid">
+                            <div class="overview-item">
+                                <div class="overview-icon">⏱️</div>
+                                <div class="overview-content">
+                                    <div class="overview-value" id="totalPracticeTime">0h 0m</div>
+                                    <div class="overview-label">Total Practice Time</div>
+                                </div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-icon">🎯</div>
+                                <div class="overview-content">
+                                    <div class="overview-value" id="totalSessions">0</div>
+                                    <div class="overview-label">Practice Sessions</div>
+                                </div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-icon">📈</div>
+                                <div class="overview-content">
+                                    <div class="overview-value" id="averageSession">0m</div>
+                                    <div class="overview-label">Average Session</div>
+                                </div>
+                            </div>
+                            <div class="overview-item">
+                                <div class="overview-icon">🏆</div>
+                                <div class="overview-content">
+                                    <div class="overview-value" id="longestSession">0m</div>
+                                    <div class="overview-label">Longest Session</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Practice Chart -->
+                    <div class="card chart-card">
+                        <div class="card-header">
+                            <h3>📈 Practice History</h3>
+                            <div class="chart-controls">
+                                <button class="btn-small" data-chart="daily">Daily</button>
+                                <button class="btn-small active" data-chart="weekly">Weekly</button>
+                                <button class="btn-small" data-chart="monthly">Monthly</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="practiceChart" width="400" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Top Practiced Items -->
+                    <div class="card top-practiced">
+                        <div class="card-header">
+                            <h3>🏅 Most Practiced</h3>
+                        </div>
+                        <div class="top-practiced-list" id="topPracticedList">
+                            <div class="empty-state">
+                                <span class="empty-icon">🎯</span>
+                                <p>Start practicing to see your most practiced items!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Tab -->
+            <section id="achievements-tab" class="tab-content">
+                <div class="achievements-layout">
+                    <!-- Current Goals -->
+                    <div class="card goals-card">
+                        <div class="card-header">
+                            <h3>🎯 Current Goals</h3>
+                            <button class="btn-link" id="editGoals">Edit Goals</button>
+                        </div>
+                        <div class="goals-grid" id="goalsGrid">
+                            <!-- Goals will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Achievements -->
+                    <div class="card achievements-card">
+                        <div class="card-header">
+                            <h3>🏆 Achievements</h3>
+                        </div>
+                        <div class="achievements-grid" id="achievementsGrid">
+                            <!-- Achievements will be populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Streak Information -->
+                    <div class="card streak-card">
+                        <div class="card-header">
+                            <h3>🔥 Practice Streaks</h3>
+                        </div>
+                        <div class="streak-content">
+                            <div class="streak-item">
+                                <div class="streak-icon">🔥</div>
+                                <div class="streak-info">
+                                    <div class="streak-value" id="currentStreakValue">0 days</div>
+                                    <div class="streak-label">Current Streak</div>
+                                </div>
+                            </div>
+                            <div class="streak-item">
+                                <div class="streak-icon">🏆</div>
+                                <div class="streak-info">
+                                    <div class="streak-value" id="longestStreakValue">0 days</div>
+                                    <div class="streak-label">Longest Streak</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="btn-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h4>🎨 Appearance</h4>
+                    <div class="setting-item">
+                        <label>Theme</label>
+                        <select id="themeSelect" class="form-select">
+                            <option value="dark">Dark</option>
+                            <option value="light">Light</option>
+                            <option value="system">System</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h4>🔔 Notifications</h4>
+                    <div class="setting-item">
+                        <label>Enable Notifications</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="notificationsToggle" class="toggle-input">
+                            <label for="notificationsToggle" class="toggle-label"></label>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Eye Care Reminders</label>
+                        <div class="toggle-switch">
+                            <input type="checkbox" id="eyeCareToggle" class="toggle-input">
+                            <label for="eyeCareToggle" class="toggle-label"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>💾 Data</h4>
+                    <div class="setting-item">
+                        <button class="btn btn-primary" id="exportData">
+                            <span class="btn-icon">📤</span>
+                            <span class="btn-text">Export Data</span>
+                        </button>
+                    </div>
+                    <div class="setting-item">
+                        <button class="btn btn-secondary" id="importData">
+                            <span class="btn-icon">📥</span>
+                            <span class="btn-text">Import Data</span>
+                        </button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </div>
+                    <div class="setting-item">
+                        <button class="btn btn-danger" id="clearData">
+                            <span class="btn-icon">🗑️</span>
+                            <span class="btn-text">Clear All Data</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h4>ℹ️ About</h4>
+                    <div class="about-info">
+                        <p><strong>Guitar Practice Tracker PWA</strong></p>
+                        <p>Version 1.0.0</p>
+                        <p>Track your guitar practice sessions and improve your skills!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="itemDetailModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="itemDetailTitle">Item Details</h3>
+                <button class="btn-close" id="closeItemDetail">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="itemDetailContent">
+                    <!-- Content populated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Goal Edit Modal -->
+    <div id="goalEditModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 Edit Daily Goal</h3>
+                <button class="btn-close" id="closeGoalEdit">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="goalMinutes">Daily Practice Goal (minutes)</label>
+                    <input type="number" id="goalMinutes" class="form-input" min="5" max="480" value="60">
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="cancelGoalEdit">Cancel</button>
+                    <button class="btn btn-success" id="saveGoalEdit">Save Goal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure?</p>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="confirmCancel">Cancel</button>
+                    <button class="btn btn-danger" id="confirmOk">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/database.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/dataManager.js"></script>
+    <script src="js/statistics.js"></script>
+    <script src="js/achievements.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Service Worker Registration -->
     <script>
-        // Study Tracker PWA - Complete functionality in one file
-        class StudyTrackerPWA {
-            constructor() {
-                this.timer = null;
-                this.startTime = null;
-                this.elapsedTime = 0;
-                this.isRunning = false;
-                this.isPaused = false;
-                
-                this.initDB();
-                this.loadData();
-                this.updateDisplay();
-                this.updateStats();
-                
-                // Register service worker for PWA
-                if ('serviceWorker' in navigator) {
-                    this.registerServiceWorker();
-                }
-            }
-            
-            async initDB() {
-                // Using localStorage for simplicity - could upgrade to IndexedDB
-                if (!localStorage.getItem('studyTracker_songs')) {
-                    localStorage.setItem('studyTracker_songs', JSON.stringify([]));
-                }
-                if (!localStorage.getItem('studyTracker_exercises')) {
-                    localStorage.setItem('studyTracker_exercises', JSON.stringify([]));
-                }
-                if (!localStorage.getItem('studyTracker_repertoire')) {
-                    localStorage.setItem('studyTracker_repertoire', JSON.stringify([]));
-                }
-                if (!localStorage.getItem('studyTracker_sessions')) {
-                    localStorage.setItem('studyTracker_sessions', JSON.stringify([]));
-                }
-            }
-            
-            loadData() {
-                this.songs = JSON.parse(localStorage.getItem('studyTracker_songs') || '[]');
-                this.exercises = JSON.parse(localStorage.getItem('studyTracker_exercises') || '[]');
-                this.repertoire = JSON.parse(localStorage.getItem('studyTracker_repertoire') || '[]');
-                this.sessions = JSON.parse(localStorage.getItem('studyTracker_sessions') || '[]');
-                
-                this.updatePracticeDropdown();
-                this.updateLibraryDisplay();
-            }
-            
-            saveData() {
-                localStorage.setItem('studyTracker_songs', JSON.stringify(this.songs));
-                localStorage.setItem('studyTracker_exercises', JSON.stringify(this.exercises));
-                localStorage.setItem('studyTracker_repertoire', JSON.stringify(this.repertoire));
-                localStorage.setItem('studyTracker_sessions', JSON.stringify(this.sessions));
-            }
-            
-            updatePracticeDropdown() {
-                const select = document.getElementById('practiceItem');
-                select.innerHTML = '<option value="">Select an item...</option>';
-                
-                this.songs.forEach(song => {
-                    const option = document.createElement('option');
-                    option.value = `Song: ${song.name}`;
-                    option.textContent = `🎵 ${song.name}${song.artist ? ' - ' + song.artist : ''}`;
-                    select.appendChild(option);
-                });
-                
-                this.exercises.forEach(exercise => {
-                    const option = document.createElement('option');
-                    option.value = `Exercise: ${exercise.name}`;
-                    option.textContent = `💪 ${exercise.name}`;
-                    select.appendChild(option);
-                });
-                
-                this.repertoire.forEach(rep => {
-                    const option = document.createElement('option');
-                    option.value = `Repertoire: ${rep.name}`;
-                    option.textContent = `⭐ ${rep.name}`;
-                    select.appendChild(option);
-                });
-            }
-            
-            updateLibraryDisplay() {
-                const libraryList = document.getElementById('libraryList');
-                libraryList.innerHTML = '';
-                
-                if (this.songs.length === 0 && this.exercises.length === 0 && this.repertoire.length === 0) {
-                    libraryList.innerHTML = '<p style="text-align: center; color: #999;">No items yet. Add some above!</p>';
-                    return;
-                }
-                
-                [...this.songs, ...this.exercises, ...this.repertoire].forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'session-item';
-                    
-                    const icon = this.songs.includes(item) ? '🎵' : 
-                               this.exercises.includes(item) ? '💪' : '⭐';
-                    
-                    itemDiv.innerHTML = `
-                        <div>
-                            <strong>${icon} ${item.name}</strong>
-                            ${item.artist ? `<br><small>${item.artist}</small>` : ''}
-                        </div>
-                        <div>
-                            <small>${this.getPracticeCount(item.name)} sessions</small>
-                        </div>
-                    `;
-                    libraryList.appendChild(itemDiv);
-                });
-            }
-            
-            getPracticeCount(itemName) {
-                return this.sessions.filter(session => 
-                    session.item.includes(itemName)
-                ).length;
-            }
-            
-            addItem() {
-                const type = document.getElementById('itemType').value;
-                const name = document.getElementById('itemName').value.trim();
-                const artist = document.getElementById('itemArtist').value.trim();
-                
-                if (!name) {
-                    alert('Please enter a name!');
-                    return;
-                }
-                
-                const item = {
-                    name: name,
-                    artist: artist,
-                    added_date: new Date().toISOString(),
-                    practice_count: 0
-                };
-                
-                if (type === 'song') {
-                    this.songs.push(item);
-                } else if (type === 'exercise') {
-                    this.exercises.push(item);
-                } else if (type === 'repertoire') {
-                    this.repertoire.push(item);
-                }
-                
-                this.saveData();
-                this.updatePracticeDropdown();
-                this.updateLibraryDisplay();
-                
-                // Clear form
-                document.getElementById('itemName').value = '';
-                document.getElementById('itemArtist').value = '';
-                
-                this.showStatus('✅ Item added successfully!');
-            }
-            
-            startTimer() {
-                if (!this.isPaused) {
-                    this.elapsedTime = 0;
-                }
-                
-                this.startTime = Date.now() - this.elapsedTime;
-                this.isRunning = true;
-                this.isPaused = false;
-                
-                this.timer = setInterval(() => {
-                    this.elapsedTime = Date.now() - this.startTime;
-                    this.updateDisplay();
-                }, 1000);
-                
-                this.updateButtonStates();
-                this.showStatus('⏱️ Timer started');
-            }
-            
-            pauseTimer() {
-                clearInterval(this.timer);
-                this.isRunning = false;
-                this.isPaused = true;
-                this.updateButtonStates();
-                this.showStatus('⏸️ Timer paused');
-            }
-            
-            stopTimer() {
-                clearInterval(this.timer);
-                
-                if (this.elapsedTime > 60000) { // Only save if > 1 minute
-                    this.saveSession();
-                }
-                
-                this.resetTimer();
-                this.updateStats();
-                this.showStatus('⏹️ Session saved');
-            }
-            
-            resetTimer() {
-                this.elapsedTime = 0;
-                this.isRunning = false;
-                this.isPaused = false;
-                this.updateDisplay();
-                this.updateButtonStates();
-            }
-            
-            saveSession() {
-                const selectedItem = document.getElementById('practiceItem').value;
-                if (!selectedItem) {
-                    alert('Please select what you practiced!');
-                    return;
-                }
-                
-                const session = {
-                    item: selectedItem,
-                    duration: Math.floor(this.elapsedTime / 1000), // seconds
-                    date: new Date().toISOString(),
-                    type: selectedItem.split(':')[0].toLowerCase()
-                };
-                
-                this.sessions.push(session);
-                this.saveData();
-                this.updateSessionsList();
-            }
-            
-            quickPractice(minutes) {
-                const selectedItem = document.getElementById('practiceItem').value;
-                if (!selectedItem) {
-                    alert('Please select what you practiced!');
-                    return;
-                }
-                
-                const session = {
-                    item: selectedItem,
-                    duration: minutes * 60, // convert to seconds
-                    date: new Date().toISOString(),
-                    type: selectedItem.split(':')[0].toLowerCase()
-                };
-                
-                this.sessions.push(session);
-                this.saveData();
-                this.updateSessionsList();
-                this.updateStats();
-                this.showStatus(`✅ ${minutes}m session added!`);
-            }
-            
-            updateDisplay() {
-                const display = document.getElementById('timerDisplay');
-                const time = this.formatTime(Math.floor(this.elapsedTime / 1000));
-                display.textContent = time;
-                
-                display.className = 'timer-display';
-                if (this.isRunning) {
-                    display.classList.add('running');
-                } else if (this.isPaused) {
-                    display.classList.add('paused');
-                }
-            }
-            
-            updateButtonStates() {
-                const startBtn = document.getElementById('startBtn');
-                const stopBtn = document.getElementById('stopBtn');
-                
-                if (this.isRunning) {
-                    startBtn.textContent = '⏸️ Pause';
-                    startBtn.onclick = () => this.pauseTimer();
-                    stopBtn.disabled = false;
-                } else if (this.isPaused) {
-                    startBtn.textContent = '▶️ Resume';
-                    startBtn.onclick = () => this.startTimer();
-                    stopBtn.disabled = false;
-                } else {
-                    startBtn.textContent = '▶️ Start';
-                    startBtn.onclick = () => this.startTimer();
-                    stopBtn.disabled = true;
-                }
-            }
-            
-            updateSessionsList() {
-                const sessionsList = document.getElementById('sessionsList');
-                sessionsList.innerHTML = '';
-                
-                if (this.sessions.length === 0) {
-                    sessionsList.innerHTML = '<p style="text-align: center; color: #999;">No sessions yet. Start practicing!</p>';
-                    return;
-                }
-                
-                const recentSessions = this.sessions
-                    .slice(-10)
-                    .reverse();
-                
-                recentSessions.forEach(session => {
-                    const sessionDiv = document.createElement('div');
-                    sessionDiv.className = 'session-item';
-                    
-                    const date = new Date(session.date);
-                    const timeStr = this.formatTime(session.duration);
-                    
-                    sessionDiv.innerHTML = `
-                        <div>
-                            <strong>${session.item}</strong>
-                            <br><small>${date.toLocaleDateString()} ${date.toLocaleTimeString()}</small>
-                        </div>
-                        <div><strong>${timeStr}</strong></div>
-                    `;
-                    sessionsList.appendChild(sessionDiv);
-                });
-            }
-            
-            updateStats() {
-                this.updateTodayStats();
-                this.updateAllTimeStats();
-                this.updateTopPracticed();
-            }
-            
-            updateTodayStats() {
-                const today = new Date().toDateString();
-                const todaySessions = this.sessions.filter(session => 
-                    new Date(session.date).toDateString() === today
-                );
-                
-                const todayTime = todaySessions.reduce((total, session) => 
-                    total + session.duration, 0
-                );
-                
-                document.getElementById('todaySessions').textContent = todaySessions.length;
-                document.getElementById('todayTime').textContent = Math.floor(todayTime / 60) + 'm';
-            }
-            
-            updateAllTimeStats() {
-                const totalSessions = this.sessions.length;
-                const totalTime = this.sessions.reduce((total, session) => 
-                    total + session.duration, 0
-                );
-                const avgSession = totalSessions > 0 ? totalTime / totalSessions : 0;
-                const longestSession = this.sessions.length > 0 ? 
-                    Math.max(...this.sessions.map(s => s.duration)) : 0;
-                
-                document.getElementById('totalSessions').textContent = totalSessions;
-                document.getElementById('totalTime').textContent = 
-                    Math.floor(totalTime / 3600) + 'h ' + Math.floor((totalTime % 3600) / 60) + 'm';
-                document.getElementById('averageSession').textContent = Math.floor(avgSession / 60) + 'm';
-                document.getElementById('longestSession').textContent = Math.floor(longestSession / 60) + 'm';
-            }
-            
-            updateTopPracticed() {
-                const itemCounts = {};
-                this.sessions.forEach(session => {
-                    itemCounts[session.item] = (itemCounts[session.item] || 0) + session.duration;
-                });
-                
-                const topItems = Object.entries(itemCounts)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 5);
-                
-                const topPracticed = document.getElementById('topPracticed');
-                topPracticed.innerHTML = '';
-                
-                if (topItems.length === 0) {
-                    topPracticed.innerHTML = '<p style="text-align: center; color: #999;">No practice data yet.</p>';
-                    return;
-                }
-                
-                topItems.forEach(([item, duration], index) => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'session-item';
-                    
-                    const medal = ['🥇', '🥈', '🥉'][index] || '🏆';
-                    
-                    itemDiv.innerHTML = `
-                        <div><strong>${medal} ${item}</strong></div>
-                        <div><strong>${this.formatTime(duration)}</strong></div>
-                    `;
-                    topPracticed.appendChild(itemDiv);
-                });
-            }
-            
-            formatTime(seconds) {
-                const hrs = Math.floor(seconds / 3600);
-                const mins = Math.floor((seconds % 3600) / 60);
-                const secs = seconds % 60;
-                
-                if (hrs > 0) {
-                    return `${hrs}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-                } else {
-                    return `${mins}:${secs.toString().padStart(2, '0')}`;
-                }
-            }
-            
-            exportData() {
-                const data = {
-                    songs: this.songs,
-                    exercises: this.exercises,
-                    repertoire: this.repertoire,
-                    sessions: this.sessions,
-                    exported_date: new Date().toISOString()
-                };
-                
-                const blob = new Blob([JSON.stringify(data, null, 2)], 
-                    { type: 'application/json' });
-                
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `study_tracker_export_${new Date().toISOString().split('T')[0]}.json`;
-                a.click();
-                
-                URL.revokeObjectURL(url);
-                this.showStatus('📂 Data exported successfully!');
-            }
-            
-            showStatus(message) {
-                const indicator = document.getElementById('statusIndicator');
-                indicator.textContent = message;
-                
-                setTimeout(() => {
-                    indicator.textContent = '📱 Ready';
-                }, 3000);
-            }
-            
-            registerServiceWorker() {
-                const swCode = `
-                    const CACHE_NAME = 'study-tracker-v1';
-                    const urlsToCache = ['/'];
-                    
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME)
-                                .then(cache => cache.addAll(urlsToCache))
-                        );
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
                     });
-                    
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request)
-                                .then(response => response || fetch(event.request))
-                        );
-                    });
-                `;
-                
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const swUrl = URL.createObjectURL(blob);
-                
-                navigator.serviceWorker.register(swUrl)
-                    .then(() => console.log('PWA: Service Worker registered'))
-                    .catch(err => console.log('PWA: Service Worker registration failed'));
-            }
-        }
-        
-        // Global functions for UI interaction
-        let app;
-        
-        function switchTab(tabName) {
-            // Hide all tabs
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
             });
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(tabName + '-tab').classList.add('active');
-            
-            // Highlight selected tab button
-            event.target.classList.add('active');
-            
-            // Update data when switching to stats
-            if (tabName === 'stats') {
-                app.updateStats();
-            }
         }
-        
-        function toggleTimer() {
-            const selectedItem = document.getElementById('practiceItem').value;
+
+        // Handle install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
             
-            if (!app.isRunning && !app.isPaused && !selectedItem) {
-                alert('Please select what you want to practice first!');
-                return;
-            }
-            
-            if (app.isRunning) {
-                app.pauseTimer();
-            } else {
-                app.startTimer();
-            }
-        }
-        
-        function stopTimer() {
-            app.stopTimer();
-        }
-        
-        function quickPractice(minutes) {
-            app.quickPractice(minutes);
-        }
-        
-        function addItem() {
-            app.addItem();
-        }
-        
-        function exportData() {
-            app.exportData();
-        }
-        
-        // Initialize app when page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            app = new StudyTrackerPWA();
-            app.updateSessionsList();
-            
-            // Add install prompt for PWA
-            let deferredPrompt;
-            
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                
-                // Show install button
-                const installBtn = document.createElement('button');
-                installBtn.textContent = '📱 Install App';
-                installBtn.className = 'button';
-                installBtn.style.position = 'fixed';
-                installBtn.style.bottom = '20px';
-                installBtn.style.right = '20px';
-                installBtn.style.zIndex = '1001';
-                
-                installBtn.onclick = async () => {
-                    if (deferredPrompt) {
-                        deferredPrompt.prompt();
-                        const { outcome } = await deferredPrompt.userChoice;
-                        if (outcome === 'accepted') {
-                            app.showStatus('📱 App installed successfully!');
-                            installBtn.remove();
-                        }
-                        deferredPrompt = null;
-                    }
-                };
-                
-                document.body.appendChild(installBtn);
-                
-                // Auto-hide after 10 seconds
-                setTimeout(() => {
-                    if (installBtn.parentNode) {
+            // Show install button in UI
+            const installBtn = document.createElement('button');
+            installBtn.textContent = '📱 Install App';
+            installBtn.className = 'btn btn-primary install-btn';
+            installBtn.onclick = async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        showToast('App installed successfully!', 'success');
                         installBtn.remove();
                     }
-                }, 10000);
-            });
+                    deferredPrompt = null;
+                }
+            };
             
-            // Handle app installation
-            window.addEventListener('appinstalled', () => {
-                app.showStatus('🎉 App installed! You can now use it offline.');
-            });
+            document.querySelector('.header-actions').prepend(installBtn);
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (installBtn.parentNode) {
+                    installBtn.remove();
+                }
+            }, 10000);
         });
-        
-        // Handle visibility change for timer
+
+        // Handle app installation
+        window.addEventListener('appinstalled', () => {
+            showToast('🎉 App installed! You can now use it offline.', 'success');
+        });
+
+        // Show loading screen until app is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulate app loading
+            setTimeout(() => {
+                document.getElementById('loadingScreen').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                
+                // Initialize app
+                if (window.GuitarPracticeApp) {
+                    window.GuitarPracticeApp.init();
+                }
+            }, 1500);
+        });
+
+        // Handle visibility change for background timer
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && app && app.isRunning) {
-                app.showStatus('⏱️ Timer running in background');
+            if (document.hidden && window.TimerManager && window.TimerManager.isRunning()) {
+                showToast('⏱️ Timer running in background', 'info');
             }
         });
-        
+
         // Prevent zoom on double tap (iOS)
         let lastTouchEnd = 0;
         document.addEventListener('touchend', function (event) {
@@ -935,28 +700,56 @@
             }
             lastTouchEnd = now;
         }, false);
-        
-        // Add some sample data for demo (remove in production)
-        function addSampleData() {
-            if (localStorage.getItem('studyTracker_hasData') !== 'true') {
-                const sampleSongs = [
-                    { name: "Hotel California", artist: "Eagles", added_date: new Date().toISOString(), practice_count: 0 },
-                    { name: "Stairway to Heaven", artist: "Led Zeppelin", added_date: new Date().toISOString(), practice_count: 0 }
-                ];
-                
-                const sampleExercises = [
-                    { name: "Chromatic Scale", artist: "", added_date: new Date().toISOString(), practice_count: 0 },
-                    { name: "Finger Independence", artist: "", added_date: new Date().toISOString(), practice_count: 0 }
-                ];
-                
-                localStorage.setItem('studyTracker_songs', JSON.stringify(sampleSongs));
-                localStorage.setItem('studyTracker_exercises', JSON.stringify(sampleExercises));
-                localStorage.setItem('studyTracker_hasData', 'true');
+
+        // Global toast function
+        function showToast(message, type = 'info', duration = 3000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || icons.info}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close">&times;</button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto remove
+            const removeToast = () => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            };
+            
+            setTimeout(removeToast, duration);
+            
+            // Manual close
+            toast.querySelector('.toast-close').addEventListener('click', removeToast);
+            
+            return toast;
+        }
+
+        // Global status indicator function
+        function updateStatusIndicator(message, duration = 3000) {
+            const indicator = document.getElementById('statusIndicator');
+            const originalText = indicator.textContent;
+            
+            indicator.textContent = message;
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    indicator.textContent = originalText;
+                }, duration);
             }
         }
-        
-        // Uncomment next line to add sample data on first load
-        // addSampleData();
     </script>
 </body>
 </html>
