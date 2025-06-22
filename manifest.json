@@ -1,0 +1,75 @@
+{
+  "name": "Guitar Practice Tracker",
+  "short_name": "GuitarTracker",
+  "description": "Track your guitar practice sessions and improve your skills",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#2D2D2D",
+  "theme_color": "#4A90E2",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "en",
+  "categories": ["music", "education", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiM0QTkwRTIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNFYyMEMxNCAyMS4xIDEzLjEgMjIgMTIgMjJDMTAuOSAyMiAxMCAyMS4xIDEwIDIwVjRDMTAgMi45IDEwLjkgMiAxMiAyWiIvPgo8cGF0aCBkPSJNNiA2QzYuNiA2IDcgNi40IDcgN1YxN0M3IDE3LjYgNi42IDE4IDYgMThDNS40IDE4IDUgMTcuNiA1IDE3VjdDNSA2LjQgNS40IDYgNiA2WiIvPgo8cGF0aCBkPSJNMTggNkMxOC42IDYgMTkgNi40IDE5IDdWMTdDMTkgMTcuNiAxOC42IDE4IDE4IDE4QzE3LjQgMTggMTcgMTcuNiAxNyAxN1Y3QzE3IDYuNCAxNy40IDYgMTggNloiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiM0QTkwRTIiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTIgMkMxMy4xIDIgMTQgMi45IDE0IDRWMjBDMTQgMjEuMSAxMy4xIDIyIDEyIDIyQzEwLjkgMjIgMTAgMjEuMSAxMCAyMFY0QzEwIDIuOSAxMC45IDIgMTIgMloiLz4KPHBhdGggZD0iTTYgNkM2LjYgNiA3IDYuNCA3IDdWMTdDNyAxNy42IDYuNiAxOCA2IDE4QzUuNCAxOCA1IDE3LjYgNSAxN1Y3QzUgNi40IDUuNCA2IDYgNloiLz4KPHBhdGggZD0iTTE4IDZDMTGUNIDZIDE5IDYuNCAxOSA3VjE3QzE5IDE3LjYgMTguNiAxOCAxOCAxOEMxNy40IDE4IDE3IDE3LjYgMTcgMTdWN0MxNyA2LjQgMTcuNCDNiAxOCA2WiIvPgo8L3N2Zz4KPC9zdmc+Cg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iNDgiIGZpbGw9IiM0QTkwRTIiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzEzLjEgMiAxNCAyLjkgMTQgNFYyMEMxNCAyMS4xIDEzLjEgMjIgMTIgMjJDMTAuOSAyMiAxMCAyMS4xIDEwIDIwVjRDMTAgMi45IDEwLjkgMiAxMiAyWiIvPgo8cGF0aCBkPSJNNiA2QzYuNiA2IDcgNi40IDcgN1YxN0M3IDE3LjYgNi42IDE4IDYgMThDNS40IDE4IDUgMTcuNiA1IDE3VjdDNSA2LjQgNS40IDYgNiA2WiIvPgo8cGF0aCBkPSJNMTggNkMxOC42IDYgMTkgNi40IDE5IDdWMTdDMTkgMTcuNiAxOC42IDE4IDE4IDE4QzE3LjQgMTggMTcgMTcuNiAxNyAxN1Y3QzE3IDYuNCAxNy40IDYgMTggNloiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNTY4IiBmaWxsPSIjMkQyRDJEIi8+CjxyZWN0IHg9IjIwIiB5PSI2MCIgd2lkdGg9IjI4MCIgaGVpZ2h0PSI2MCIgcng9IjEyIiBmaWxsPSIjM0EzQTNBIi8+Cjx0ZXh0IHg9IjQwIiB5PSI5NSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IndoaXRlIj7wn46YIEd1aXRhciBQcmFjdGljZSBUcmFja2VyPC90ZXh0Pgo8cmVjdCB4PSIyMCIgeT0iMTQwIiB3aWR0aD0iMjgwIiBoZWlnaHQ9IjIwMCIgcng9IjEyIiBmaWxsPSIjM0EzQTNBIi8+Cjx0ZXh0IHg9IjE2MCIgeT0iMjMwIiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjM2IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+MDA6MDA6MDA8L3RleHQ+CjxyZWN0IHg9IjIwIiB5PSIzNjAiIHdpZHRoPSIyODAiIGhlaWdodD0iMTAwIiByeD0iMTIiIGZpbGw9IiMzQTNBM0EiLz4KPHR4dCB4PSI0MCIgeT0iMzk1IiBmb250LWZhbWlseT0ic2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iI0NDQ0NDQyI+UmVjZW50IFNlc3Npb25zPC90ZXh0Pgo8L3N2Zz4K",
+      "sizes": "320x568",
+      "type": "image/svg+xml",
+      "form_factor": "narrow",
+      "label": "Timer view showing practice session in progress"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Practice",
+      "short_name": "Practice",
+      "description": "Start a new practice session",
+      "url": "./?tab=timer",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiM0QTkwRTIiLz4KPHBhdGggZD0iTTEwIDhMMTYgMTJMMTAgMTZWOFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "View Statistics",
+      "short_name": "Stats",
+      "description": "View your practice statistics",
+      "url": "./?tab=statistics",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiIGZpbGw9IiM0QTkwRTIiLz4KPHJlY3QgeD0iOCIgeT0iMTQiIHdpZHRoPSIyIiBoZWlnaHQ9IjQiIGZpbGw9IndoaXRlIi8+CjxyZWN0IHg9IjExIiB5PSIxMCIgd2lkdGg9IjIiIGhlaWdodD0iOCIgZmlsbD0id2hpdGUiLz4KPHJlY3QgeD0iMTQiIHk9IjYiIHdpZHRoPSIyIiBoZWlnaHQ9IjEyIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://neburn.github.io/GuitarPractice/"
+    }
+  ],
+  "prefer_related_applications": false
+}
