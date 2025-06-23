@@ -971,6 +971,13 @@
             loadData();
             setupEventListeners();
             updateUI();
+            
+            // Initialize library display on first load
+            if (appState.activeTab === 'practice') {
+                // Make sure library data is ready
+                updateLibraryDisplay();
+            }
+            
             console.log('✅ App initialized successfully');
         }
 
@@ -984,13 +991,27 @@
                 });
             });
 
-            // Library navigation
-            document.querySelectorAll('.library-tab-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const type = e.currentTarget.getAttribute('data-type');
-                    switchLibraryType(type);
+            // Library navigation - Setup with delay to ensure elements exist
+            setTimeout(() => {
+                document.querySelectorAll('.library-tab-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = e.currentTarget.getAttribute('data-type');
+                        switchLibraryType(type);
+                    });
                 });
-            });
+                
+                // Add item form
+                const addItemForm = document.getElementById('addItemForm');
+                if (addItemForm) {
+                    addItemForm.addEventListener('submit', handleAddItem);
+                }
+                
+                // Create routine
+                const createRoutineBtn = document.getElementById('createRoutineBtn');
+                if (createRoutineBtn) {
+                    createRoutineBtn.addEventListener('click', showCreateRoutineModal);
+                }
+            }, 100);
 
             // Timer controls
             document.getElementById('startBtn').addEventListener('click', startTimer);
@@ -1002,12 +1023,6 @@
 
             // Practice item selection - Load notes when item changes
             document.getElementById('practiceItem').addEventListener('change', loadSessionNotes);
-
-            // Add item form
-            document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
-
-            // Create routine
-            document.getElementById('createRoutineBtn').addEventListener('click', showCreateRoutineModal);
 
             // Settings
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
@@ -1351,15 +1366,24 @@
             updateStatistics();
             updateTimerDisplay();
             updateTimerButtons();
-            updateLibraryDisplay();
-            updateRoutinesDisplay();
             updatePracticeItemsSelect();
             loadSessionNotes(); // Load notes for current/selected item
+            
+            // Update library and routines only if tabs exist
+            setTimeout(() => {
+                if (document.getElementById('itemsList')) {
+                    updateLibraryDisplay();
+                }
+                if (document.getElementById('routinesGrid')) {
+                    updateRoutinesDisplay();
+                }
+            }, 50);
         }
 
         // Library Functions
         function handleAddItem(e) {
             e.preventDefault();
+            console.log('📝 Adding new item...');
             
             const name = document.getElementById('itemName').value.trim();
             const artist = document.getElementById('itemArtist').value.trim();
@@ -1381,6 +1405,13 @@
                 addedDate: new Date().toISOString()
             };
             
+            console.log('📝 Adding item to:', appState.currentLibraryType, item);
+            
+            // Make sure the array exists
+            if (!appState.data[appState.currentLibraryType]) {
+                appState.data[appState.currentLibraryType] = [];
+            }
+            
             appState.data[appState.currentLibraryType].push(item);
             saveData();
             updateLibraryDisplay();
@@ -1393,8 +1424,13 @@
         }
 
         function updateLibraryDisplay() {
+            // Check if we're in library tab and elements exist
+            if (!document.getElementById('itemsListTitle')) {
+                return; // Elements not ready yet
+            }
+            
             const type = appState.currentLibraryType;
-            const items = appState.data[type];
+            const items = appState.data[type] || [];
             
             // Update title and button text
             const titles = {
@@ -1403,19 +1439,32 @@
                 repertoire: { title: '⭐ Your Repertoire', add: 'Add Repertoire', form: '➕ Add New Repertoire' }
             };
             
-            document.getElementById('itemsListTitle').textContent = titles[type].title;
-            document.getElementById('addBtnText').textContent = titles[type].add;
-            document.getElementById('addItemTitle').textContent = titles[type].form;
+            const titleInfo = titles[type];
+            if (titleInfo) {
+                const titleEl = document.getElementById('itemsListTitle');
+                const addBtnEl = document.getElementById('addBtnText');
+                const addTitleEl = document.getElementById('addItemTitle');
+                
+                if (titleEl) titleEl.textContent = titleInfo.title;
+                if (addBtnEl) addBtnEl.textContent = titleInfo.add;
+                if (addTitleEl) addTitleEl.textContent = titleInfo.form;
+            }
             
             // Show/hide artist field for songs and repertoire
             const artistGroup = document.getElementById('artistGroup');
-            artistGroup.style.display = (type === 'songs' || type === 'repertoire') ? 'block' : 'none';
+            if (artistGroup) {
+                artistGroup.style.display = (type === 'songs' || type === 'repertoire') ? 'block' : 'none';
+            }
             
             // Update counts
-            document.getElementById(type + 'Count').textContent = items.length;
+            const countEl = document.getElementById(type + 'Count');
+            if (countEl) {
+                countEl.textContent = items.length;
+            }
             
             // Update items list
             const itemsList = document.getElementById('itemsList');
+            if (!itemsList) return;
             
             if (items.length === 0) {
                 itemsList.innerHTML = `
@@ -1433,12 +1482,12 @@
                         <h4>${item.name}</h4>
                         <div class="item-meta">
                             ${item.artist ? `${item.artist} • ` : ''}
-                            ${item.practiceCount} sessions
-                            ${item.tags.length ? ` • ${item.tags.join(', ')}` : ''}
+                            ${item.practiceCount || 0} sessions
+                            ${item.tags && item.tags.length ? ` • ${item.tags.join(', ')}` : ''}
                         </div>
                     </div>
                     <div class="item-actions">
-                        <button class="btn btn-primary btn-small" onclick="quickPractice('${item.name}', '${type}')">
+                        <button class="btn btn-primary btn-small" onclick="quickPractice('${item.name.replace(/'/g, "\\'")}', '${type}')">
                             🎯 Practice
                         </button>
                         <button class="btn btn-danger btn-small" onclick="deleteItem(${item.id}, '${type}')">
@@ -1447,6 +1496,8 @@
                     </div>
                 </div>
             `).join('');
+            
+            console.log(`📚 Library display updated for ${type}:`, items.length, 'items');
         }
 
         function deleteItem(id, type) {
