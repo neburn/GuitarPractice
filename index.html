@@ -109,7 +109,7 @@ function updateLibraryDisplay() {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Practice Manager</title>
     
     <!-- PWA Configuration -->
@@ -118,6 +118,10 @@ function updateLibraryDisplay() {
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Practice Manager">
+    
+    <!-- Mobile optimizations -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="mobile-web-app-capable" content="yes">
     
     <style>
         :root {
@@ -694,34 +698,299 @@ function updateLibraryDisplay() {
             border-left: 4px solid #FFC107;
         }
 
-        /* Responsive */
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
+            .main-content {
+                padding: 10px;
+            }
+            
             .timer-layout,
             .library-layout {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .routines-grid {
                 grid-template-columns: 1fr;
             }
             
-            .main-content {
-                padding: 15px;
-            }
-            
             .tab-navigation {
                 overflow-x: auto;
                 justify-content: flex-start;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            
+            .tab-navigation::-webkit-scrollbar {
+                display: none;
             }
             
             .tab-button {
-                min-width: 100px;
+                min-width: 90px;
                 flex-shrink: 0;
+                padding: 10px 12px;
+                font-size: 11px;
             }
+            
+            .timer-display {
+                font-size: 36px;
+            }
+            
+            .timer-display-container {
+                padding: 20px 10px;
+            }
+            
+            .timer-controls {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .timer-controls .btn {
+                height: 50px;
+                font-size: 16px;
+            }
+            
+            .card-header {
+                padding: 15px;
+            }
+            
+            .card-header h3 {
+                font-size: 16px;
+            }
+            
+            .input-group {
+                padding: 0 15px;
+                margin-bottom: 12px;
+            }
+            
+            .library-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .library-tab-btn {
+                flex: 1;
+                min-width: 80px;
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+            
+            .item-card {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .item-actions {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .routine-card {
+                padding: 15px;
+            }
+            
+            .routine-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .routine-actions {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .modal-content {
+                width: 95vw;
+                max-height: 90vh;
+                margin: 20px auto;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .goal-display {
+                margin: 0 auto 20px;
+            }
+            
+            .goal-current {
+                font-size: 28px;
+            }
+            
+            /* Touch-friendly buttons */
+            .btn {
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+            
+            .btn-small {
+                min-height: 36px;
+                padding: 8px 12px;
+            }
+            
+            .form-input,
+            .form-select,
+            .form-textarea {
+                min-height: 44px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            /* Routine progress optimizations */
+            #routineProgressCard {
+                order: -1; /* Show at top on mobile */
+            }
+            
+            .routine-item {
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .drag-handle {
+                font-size: 18px;
+                padding: 8px;
+            }
+            
+            /* Header optimizations */
+            .app-header {
+                height: 60px;
+            }
+            
+            .header-content {
+                padding: 0 15px;
+            }
+            
+            .app-title {
+                gap: 10px;
+            }
+            
+            .app-icon {
+                font-size: 24px;
+            }
+            
+            .title-text h1 {
+                font-size: 18px;
+            }
+            
+            .subtitle {
+                font-size: 12px;
+            }
+            
+            .header-actions .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            /* Toast positioning */
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+            }
+            
+            /* Chart responsiveness */
+            #practiceChart {
+                max-width: 100%;
+                height: auto;
+            }
+            
+            /* Settings modal mobile */
+            .modal-content {
+                border-radius: 8px;
+            }
+            
+            /* Form improvements */
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            /* Skip button more prominent on mobile */
+            #skipItemBtn {
+                height: 50px;
+                font-size: 16px;
+                font-weight: bold;
+            }
+        }
+
+        /* Landscape phone optimizations */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .timer-display {
+                font-size: 28px;
+            }
+            
+            .timer-display-container {
+                padding: 15px 10px;
+            }
+            
+            .timer-controls {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+            
+            .app-header {
+                height: 50px;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 8px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .tab-button {
+                min-width: 70px;
+                padding: 8px 6px;
+            }
+            
+            .timer-display {
+                font-size: 32px;
+            }
+            
+            .library-tab-btn {
+                padding: 8px 6px;
+                font-size: 10px;
+            }
+            
+            .routine-card {
+                padding: 12px;
+            }
+        }
+
+        /* Improved touch targets */
+        .btn, .tab-button, .library-tab-btn {
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+        }
+
+        /* Better scrolling on mobile */
+        .items-list,
+        .routines-grid,
+        #routineItemsProgress {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Prevent text selection on interactive elements */
+        .tab-button, .btn, .library-tab-btn, .routine-card {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
     </style>
 </head>
@@ -2124,7 +2393,95 @@ function updateLibraryDisplay() {
                     setTheme('system');
                 }
             });
+            
+            // Mobile optimizations
+            setupMobileOptimizations();
         });
+
+        // Mobile-specific optimizations
+        function setupMobileOptimizations() {
+            // Prevent zoom on double tap
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function (event) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    event.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+            
+            // Handle orientation changes
+            window.addEventListener('orientationchange', function() {
+                setTimeout(() => {
+                    // Force recalculation of layout
+                    updateUI();
+                }, 500);
+            });
+            
+            // Optimize scrolling on mobile
+            if ('scrollBehavior' in document.documentElement.style) {
+                document.documentElement.style.scrollBehavior = 'smooth';
+            }
+            
+            // Better drag and drop on mobile
+            if (window.navigator.maxTouchPoints > 0) {
+                setupMobileDragAndDrop();
+            }
+        }
+
+        function setupMobileDragAndDrop() {
+            // Enhanced mobile drag and drop for routine items
+            let draggedElement = null;
+            let touchStartY = 0;
+            let dragOffset = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                const target = e.target.closest('.routine-item[draggable="true"]');
+                if (target && e.target.closest('.drag-handle')) {
+                    draggedElement = target;
+                    touchStartY = e.touches[0].clientY;
+                    target.style.opacity = '0.7';
+                    target.style.transform = 'scale(1.05)';
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (draggedElement) {
+                    const currentY = e.touches[0].clientY;
+                    dragOffset = currentY - touchStartY;
+                    draggedElement.style.transform = `translateY(${dragOffset}px) scale(1.05)`;
+                    e.preventDefault();
+                }
+            });
+            
+            document.addEventListener('touchend', function(e) {
+                if (draggedElement) {
+                    const target = document.elementFromPoint(
+                        e.changedTouches[0].clientX,
+                        e.changedTouches[0].clientY
+                    );
+                    const targetItem = target?.closest('.routine-item[draggable="true"]');
+                    
+                    if (targetItem && targetItem !== draggedElement) {
+                        const draggedIndex = parseInt(draggedElement.dataset.index);
+                        const targetIndex = parseInt(targetItem.dataset.index);
+                        
+                        // Reorder items
+                        const items = appState.currentRoutine.items;
+                        const draggedItem = items[draggedIndex];
+                        items.splice(draggedIndex, 1);
+                        items.splice(targetIndex, 0, draggedItem);
+                        
+                        updateRoutineItemsDisplay();
+                    }
+                    
+                    draggedElement.style.opacity = '';
+                    draggedElement.style.transform = '';
+                    draggedElement = null;
+                }
+            });
+        }
 
         // Utility Functions
         function formatTime(seconds) {
