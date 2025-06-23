@@ -1,4 +1,111 @@
-<!DOCTYPE html>
+function updateLibraryDisplay() {
+            const type = appState.currentLibraryType;
+            const items = appState.data[type];
+            
+            // Update title and button text
+            const titles = {
+                songs: { title: '🎵 Your Songs', add: 'Add Song', form: '➕ Add New Song' },
+                exercises: { title: '💪 Your Exercises', add: 'Add Exercise', form: '➕ Add New Exercise' },
+                repertoire: { title: '⭐ Your Repertoire', add: 'Add Repertoire', form: '➕ Add New Repertoire' }
+            };
+            
+            document.getElementById('itemsListTitle').textContent = titles[type].title;
+            document.getElementById('addBtnText').textContent = titles[type].add;
+            document.getElementById('addItemTitle').textContent = titles[type].form;
+            
+            // Show/hide artist field for songs and repertoire
+            const artistGroup = document.getElementById('artistGroup');
+            artistGroup.style.display = (type === 'songs' || type === 'repertoire') ? 'block' : 'none';
+            
+            // Update counts
+            document.getElementById(type + 'Count').textContent = items.length;
+            
+            // Update items list
+            const itemsList =         /* Goal Display */
+        .goal-display {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .goal-current {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--sidebar-active);
+            margin-bottom: 5px;
+        }
+
+        .goal-target {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .goal-bar {
+            height: 12px;
+            background: var(--card-border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .goal-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--button-success), var(--sidebar-active));
+            transition: width 0.3s ease;
+        }
+
+        /* Routine Items with Drag Handle */
+        .routine-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid var(--card-border);
+            background: var(--input-background);
+            margin-bottom: 2px;
+            border-radius: 4px;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            padding: 4px;
+            margin-right: 8px;
+            color: var(--text-muted);
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .routine-item.dragging {
+            opacity: 0.5;
+        }
+
+        .break-item {
+            background: linear-gradient(90deg, #FFC107, #FF8F00);
+            color: #000;
+        }
+
+        .break-item .drag-handle {
+            color: #666;
+        }        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-icon {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            border-radius: var(--corner-radius);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .btn-icon:hover {
+            background: var(--card-border);
+        }<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -624,11 +731,17 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="app-title">
-                    <span class="app-icon">⏱️</span>
+                    <span class="app-icon">🎸</span>
                     <div class="title-text">
                         <h1>Practice Manager</h1>
                         <p class="subtitle">Track your practice sessions</p>
                     </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="settingsBtn">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </button>
                 </div>
             </div>
         </header>
@@ -696,10 +809,25 @@
                     <div class="card">
                         <div class="card-header">
                             <h3>📝 Session Notes</h3>
+                            <span id="notesStatus"></span>
                         </div>
                         <div class="input-group">
-                            <textarea id="sessionNotes" class="form-textarea" rows="8" 
+                            <textarea id="sessionNotes" class="form-textarea" rows="6" 
                                 placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Routine Progress (when practicing routine) -->
+                    <div class="card" id="routineProgressCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>📋 Routine Progress</h3>
+                            <span id="routineProgress">0 / 0</span>
+                        </div>
+                        <div id="routineItemsProgress"></div>
+                        <div style="padding: 0 20px 20px;">
+                            <button class="btn btn-warning" id="skipItemBtn" style="width: 100%;">
+                                ⏭️ Skip Current Item
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -809,8 +937,24 @@
                         <div class="stat-label">Average Session</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" id="longestSession">0m</div>
-                        <div class="stat-label">Longest Session</div>
+                        <div class="stat-value" id="dailyGoalProgress">0%</div>
+                        <div class="stat-label">Daily Goal Progress</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🎯 Daily Goal</h3>
+                        <button class="btn btn-primary btn-small" id="editDailyGoal">Edit Goal</button>
+                    </div>
+                    <div style="padding: 20px; text-align: center;">
+                        <div class="goal-display">
+                            <div class="goal-current" id="goalCurrent">0 min</div>
+                            <div class="goal-target">of <span id="goalTarget">60</span> min goal</div>
+                            <div class="goal-bar">
+                                <div class="goal-progress" id="goalProgressBar" style="width: 0%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -840,12 +984,19 @@
                 </div>
                 <div class="input-group">
                     <label>Add Items to Routine</label>
-                    <select id="routineItemSelect" class="form-select">
-                        <option value="">Select an item to add...</option>
-                    </select>
-                    <button type="button" class="btn btn-primary" id="addToRoutineBtn" style="margin-top: 10px;">
-                        Add Item
-                    </button>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <select id="routineItemSelect" class="form-select" style="flex: 1;">
+                            <option value="">Select an item to add...</option>
+                        </select>
+                        <button type="button" class="btn btn-primary" id="addToRoutineBtn">Add Item</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-warning" id="addBreakBtn">
+                            ☕ Add Break
+                        </button>
+                        <input type="number" id="breakDuration" class="form-input" placeholder="Minutes" 
+                               style="width: 100px;" min="1" max="60" value="5">
+                    </div>
                 </div>
                 <div class="input-group">
                     <label>Routine Items</label>
@@ -861,6 +1012,66 @@
         </div>
     </div>
 
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="btn-close" id="closeSettings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="themeSelect">Theme</label>
+                    <select id="themeSelect" class="form-select">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="system">System</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="dailyGoalInput">Daily Practice Goal (minutes)</label>
+                    <input type="number" id="dailyGoalInput" class="form-input" min="5" max="480" value="60">
+                </div>
+                
+                <div class="input-group">
+                    <label>Data Management</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="exportDataBtn">📤 Export Data</button>
+                        <button class="btn btn-primary" id="importDataBtn">📥 Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button class="btn btn-danger" id="clearDataBtn">🗑️ Clear All Data</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button class="btn btn-danger" id="cancelSettings">Cancel</button>
+                    <button class="btn btn-success" id="saveSettings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Goal Edit Modal -->
+    <div id="dailyGoalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 Edit Daily Goal</h3>
+                <button class="btn-close" id="closeDailyGoal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="newDailyGoal">Daily Practice Goal (minutes)</label>
+                    <input type="number" id="newDailyGoal" class="form-input" min="5" max="480" value="60">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button class="btn btn-danger" id="cancelDailyGoal">Cancel</button>
+                    <button class="btn btn-success" id="saveDailyGoal">Save Goal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Application State
         const appState = {
@@ -871,14 +1082,21 @@
                 isPaused: false,
                 startTime: null,
                 elapsed: 0,
-                currentItem: null
+                currentItem: null,
+                currentRoutine: null,
+                currentRoutineIndex: 0
+            },
+            settings: {
+                theme: 'dark',
+                dailyGoal: 60
             },
             data: {
                 songs: [],
                 exercises: [],
                 repertoire: [],
                 routines: [],
-                sessions: []
+                sessions: [],
+                notes: {}
             },
             currentRoutine: { name: '', items: [] }
         };
@@ -914,9 +1132,29 @@
             document.getElementById('startBtn').addEventListener('click', startTimer);
             document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
             document.getElementById('stopBtn').addEventListener('click', stopTimer);
+            document.getElementById('skipItemBtn').addEventListener('click', skipRoutineItem);
+
+            // Session notes
+            document.getElementById('sessionNotes').addEventListener('input', saveSessionNotes);
 
             // Add item form
             document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
+
+            // Settings
+            document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
+            document.getElementById('closeSettings').addEventListener('click', hideSettingsModal);
+            document.getElementById('cancelSettings').addEventListener('click', hideSettingsModal);
+            document.getElementById('saveSettings').addEventListener('click', saveSettings);
+            document.getElementById('exportDataBtn').addEventListener('click', exportData);
+            document.getElementById('importDataBtn').addEventListener('click', () => document.getElementById('importFile').click());
+            document.getElementById('importFile').addEventListener('change', importData);
+            document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
+
+            // Daily goal
+            document.getElementById('editDailyGoal').addEventListener('click', showDailyGoalModal);
+            document.getElementById('closeDailyGoal').addEventListener('click', hideDailyGoalModal);
+            document.getElementById('cancelDailyGoal').addEventListener('click', hideDailyGoalModal);
+            document.getElementById('saveDailyGoal').addEventListener('click', saveDailyGoal);
 
             // Create routine
             document.getElementById('createRoutineBtn').addEventListener('click', showCreateRoutineModal);
@@ -924,12 +1162,20 @@
             document.getElementById('cancelCreateRoutine').addEventListener('click', hideCreateRoutineModal);
             document.getElementById('saveRoutine').addEventListener('click', saveRoutine);
             document.getElementById('addToRoutineBtn').addEventListener('click', addItemToRoutine);
+            document.getElementById('addBreakBtn').addEventListener('click', addBreakToRoutine);
 
             // Modal close on outside click
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal')) {
+                    hideSettingsModal();
                     hideCreateRoutineModal();
+                    hideDailyGoalModal();
                 }
+            });
+
+            // Theme handling
+            document.getElementById('themeSelect').addEventListener('change', (e) => {
+                setTheme(e.target.value);
             });
         }
 
@@ -984,6 +1230,17 @@
                 appState.timer.startTime = Date.now();
                 appState.timer.elapsed = 0;
                 appState.timer.currentItem = selectedItem;
+                
+                // Check if it's a routine
+                if (selectedItem.startsWith('Routine: ')) {
+                    const routineName = selectedItem.substring(9);
+                    const routine = appState.data.routines.find(r => r.name === routineName);
+                    if (routine) {
+                        appState.timer.currentRoutine = routine;
+                        appState.timer.currentRoutineIndex = 0;
+                        updateRoutineProgress();
+                    }
+                }
             }
 
             appState.timer.isRunning = true;
@@ -1027,10 +1284,59 @@
             appState.timer.elapsed = 0;
             appState.timer.startTime = null;
             appState.timer.currentItem = null;
+            appState.timer.currentRoutine = null;
+            appState.timer.currentRoutineIndex = 0;
             
             updateTimerDisplay();
             updateTimerButtons();
+            updateRoutineProgress();
             updateStatistics();
+        }
+
+        function skipRoutineItem() {
+            if (!appState.timer.currentRoutine) return;
+            
+            appState.timer.currentRoutineIndex++;
+            
+            if (appState.timer.currentRoutineIndex >= appState.timer.currentRoutine.items.length) {
+                // Routine completed
+                showToast('Routine completed!', 'success');
+                stopTimer();
+            } else {
+                updateRoutineProgress();
+                showToast('Skipped to next item', 'info');
+            }
+        }
+
+        function updateRoutineProgress() {
+            const progressCard = document.getElementById('routineProgressCard');
+            const progressText = document.getElementById('routineProgress');
+            const progressItems = document.getElementById('routineItemsProgress');
+            
+            if (!appState.timer.currentRoutine) {
+                progressCard.style.display = 'none';
+                return;
+            }
+            
+            progressCard.style.display = 'block';
+            const current = appState.timer.currentRoutineIndex + 1;
+            const total = appState.timer.currentRoutine.items.length;
+            progressText.textContent = `${current} / ${total}`;
+            
+            // Show current and next items
+            progressItems.innerHTML = appState.timer.currentRoutine.items.map((item, index) => {
+                const isActive = index === appState.timer.currentRoutineIndex;
+                const isDone = index < appState.timer.currentRoutineIndex;
+                const classes = `routine-item ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}`;
+                const icon = isDone ? '✅' : isActive ? '▶️' : '⏸️';
+                
+                return `
+                    <div class="${classes}" style="padding: 8px; ${isActive ? 'background: var(--sidebar-active); color: white;' : ''}">
+                        <span>${icon}</span>
+                        <span style="margin-left: 8px;">${item.name} (${item.duration}m)</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         function updateTimer() {
@@ -1131,9 +1437,9 @@
             document.getElementById('addBtnText').textContent = titles[type].add;
             document.getElementById('addItemTitle').textContent = titles[type].form;
             
-            // Show/hide artist field for songs only
+            // Show/hide artist field for songs and repertoire
             const artistGroup = document.getElementById('artistGroup');
-            artistGroup.style.display = type === 'songs' ? 'block' : 'none';
+            artistGroup.style.display = (type === 'songs' || type === 'repertoire') ? 'block' : 'none';
             
             // Update counts
             document.getElementById(type + 'Count').textContent = items.length;
@@ -1171,6 +1477,248 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // Settings Functions
+        function showSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'block';
+            document.getElementById('themeSelect').value = appState.settings.theme;
+            document.getElementById('dailyGoalInput').value = appState.settings.dailyGoal;
+        }
+
+        function hideSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function saveSettings() {
+            appState.settings.theme = document.getElementById('themeSelect').value;
+            appState.settings.dailyGoal = parseInt(document.getElementById('dailyGoalInput').value);
+            
+            setTheme(appState.settings.theme);
+            saveData();
+            updateStatistics();
+            hideSettingsModal();
+            showToast('Settings saved!', 'success');
+        }
+
+        function setTheme(theme) {
+            appState.settings.theme = theme;
+            
+            if (theme === 'system') {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            
+            if (theme === 'light') {
+                document.documentElement.style.setProperty('--background', '#FFFFFF');
+                document.documentElement.style.setProperty('--sidebar', '#F8F9FA');
+                document.documentElement.style.setProperty('--card-background', '#FFFFFF');
+                document.documentElement.style.setProperty('--card-border', '#DEE2E6');
+                document.documentElement.style.setProperty('--text-primary', '#212529');
+                document.documentElement.style.setProperty('--text-secondary', '#6C757D');
+                document.documentElement.style.setProperty('--text-muted', '#ADB5BD');
+                document.documentElement.style.setProperty('--input-background', '#FFFFFF');
+                document.documentElement.style.setProperty('--input-border', '#CED4DA');
+            } else {
+                // Dark theme (default)
+                document.documentElement.style.setProperty('--background', '#2D2D2D');
+                document.documentElement.style.setProperty('--sidebar', '#1E1E1E');
+                document.documentElement.style.setProperty('--card-background', '#3A3A3A');
+                document.documentElement.style.setProperty('--card-border', '#4A4A4A');
+                document.documentElement.style.setProperty('--text-primary', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-secondary', '#CCCCCC');
+                document.documentElement.style.setProperty('--text-muted', '#999999');
+                document.documentElement.style.setProperty('--input-background', '#4A4A4A');
+                document.documentElement.style.setProperty('--input-border', '#5A5A5A');
+            }
+        }
+
+        function exportData() {
+            const dataToExport = {
+                ...appState.data,
+                settings: appState.settings,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `practice-manager-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Data exported successfully!', 'success');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validate and merge data
+                    if (importedData.songs) appState.data.songs = importedData.songs;
+                    if (importedData.exercises) appState.data.exercises = importedData.exercises;
+                    if (importedData.repertoire) appState.data.repertoire = importedData.repertoire;
+                    if (importedData.routines) appState.data.routines = importedData.routines;
+                    if (importedData.sessions) appState.data.sessions = importedData.sessions;
+                    if (importedData.notes) appState.data.notes = importedData.notes;
+                    if (importedData.settings) appState.settings = { ...appState.settings, ...importedData.settings };
+                    
+                    saveData();
+                    updateUI();
+                    setTheme(appState.settings.theme);
+                    showToast('Data imported successfully!', 'success');
+                    
+                } catch (error) {
+                    showToast('Error importing data. Please check the file format.', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                appState.data = {
+                    songs: [],
+                    exercises: [],
+                    repertoire: [],
+                    routines: [],
+                    sessions: [],
+                    notes: {}
+                };
+                saveData();
+                updateUI();
+                showToast('All data cleared', 'warning');
+            }
+        }
+
+        // Daily Goal Functions
+        function showDailyGoalModal() {
+            document.getElementById('dailyGoalModal').style.display = 'block';
+            document.getElementById('newDailyGoal').value = appState.settings.dailyGoal;
+        }
+
+        function hideDailyGoalModal() {
+            document.getElementById('dailyGoalModal').style.display = 'none';
+        }
+
+        function saveDailyGoal() {
+            const newGoal = parseInt(document.getElementById('newDailyGoal').value);
+            if (newGoal >= 5 && newGoal <= 480) {
+                appState.settings.dailyGoal = newGoal;
+                saveData();
+                updateStatistics();
+                hideDailyGoalModal();
+                showToast('Daily goal updated!', 'success');
+            } else {
+                showToast('Goal must be between 5 and 480 minutes', 'error');
+            }
+        }
+
+        // Session Notes Functions
+        function saveSessionNotes() {
+            const notes = document.getElementById('sessionNotes').value;
+            const currentItem = appState.timer.currentItem || 'general';
+            appState.data.notes[currentItem] = notes;
+            saveData();
+            
+            // Update status indicator
+            const status = document.getElementById('notesStatus');
+            status.textContent = '✓ Saved';
+            status.style.color = 'var(--button-success)';
+            setTimeout(() => {
+                status.textContent = '';
+            }, 2000);
+        }
+
+        function loadSessionNotes() {
+            const currentItem = appState.timer.currentItem || 'general';
+            const notes = appState.data.notes[currentItem] || '';
+            document.getElementById('sessionNotes').value = notes;
+        }
+
+        // Routine Functions with Breaks and Reordering
+        function addBreakToRoutine() {
+            const duration = parseInt(document.getElementById('breakDuration').value) || 5;
+            
+            appState.currentRoutine.items.push({
+                name: `☕ Break`,
+                duration: duration,
+                type: 'break'
+            });
+            
+            updateRoutineItemsDisplay();
+        }
+
+        function updateRoutineItemsDisplay() {
+            const container = document.getElementById('routineItemsList');
+            
+            if (appState.currentRoutine.items.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin: 30px 0;">No items added yet</p>';
+                return;
+            }
+            
+            const totalDuration = appState.currentRoutine.items.reduce((sum, item) => sum + item.duration, 0);
+            
+            container.innerHTML = `
+                <div style="margin-bottom: 15px; padding: 10px; background: var(--input-background); border-radius: 8px;">
+                    <strong>Total Duration: ${totalDuration} minutes</strong>
+                </div>
+                ${appState.currentRoutine.items.map((item, index) => `
+                    <div class="routine-item ${item.type === 'break' ? 'break-item' : ''}" draggable="true" data-index="${index}">
+                        <span class="drag-handle">⋮⋮</span>
+                        <span style="flex: 1;">${index + 1}. ${item.name} (${item.duration}m)</span>
+                        <button class="btn btn-danger btn-small" onclick="removeFromRoutine(${index})">×</button>
+                    </div>
+                `).join('')}
+            `;
+            
+            // Add drag and drop functionality
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const items = document.querySelectorAll('.routine-item[draggable="true"]');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.index);
+                    e.target.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+                
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const targetIndex = parseInt(e.target.closest('.routine-item').dataset.index);
+                    
+                    if (draggedIndex !== targetIndex) {
+                        // Reorder items
+                        const items = appState.currentRoutine.items;
+                        const draggedItem = items[draggedIndex];
+                        items.splice(draggedIndex, 1);
+                        items.splice(targetIndex, 0, draggedItem);
+                        
+                        updateRoutineItemsDisplay();
+                    }
+                });
+            });
         }
 
         function deleteItem(id, type) {
@@ -1359,7 +1907,7 @@
             }
         }
 
-        // Statistics Functions
+        // Statistics Functions with Daily Goal
         function updateStatistics() {
             const sessions = appState.data.sessions;
             
@@ -1367,21 +1915,39 @@
                 document.getElementById('totalTime').textContent = '0h 0m';
                 document.getElementById('totalSessions').textContent = '0';
                 document.getElementById('averageSession').textContent = '0m';
-                document.getElementById('longestSession').textContent = '0m';
+                document.getElementById('dailyGoalProgress').textContent = '0%';
+                updateDailyGoalDisplay(0);
                 return;
             }
             
             const totalTime = sessions.reduce((sum, session) => sum + session.duration, 0);
             const totalSessions = sessions.length;
             const averageSession = Math.floor(totalTime / totalSessions);
-            const longestSession = Math.max(...sessions.map(s => s.duration));
+            
+            // Calculate today's progress
+            const today = new Date().toDateString();
+            const todaySessions = sessions.filter(session => 
+                new Date(session.date).toDateString() === today
+            );
+            const todayTime = todaySessions.reduce((sum, session) => sum + session.duration, 0);
+            const todayMinutes = Math.floor(todayTime / 60);
+            const goalProgress = Math.min((todayMinutes / appState.settings.dailyGoal) * 100, 100);
             
             document.getElementById('totalTime').textContent = formatTime(totalTime);
             document.getElementById('totalSessions').textContent = totalSessions;
             document.getElementById('averageSession').textContent = formatTime(averageSession);
-            document.getElementById('longestSession').textContent = formatTime(longestSession);
+            document.getElementById('dailyGoalProgress').textContent = Math.round(goalProgress) + '%';
             
+            updateDailyGoalDisplay(todayMinutes);
             drawPracticeChart(sessions);
+        }
+
+        function updateDailyGoalDisplay(currentMinutes) {
+            document.getElementById('goalCurrent').textContent = `${currentMinutes} min`;
+            document.getElementById('goalTarget').textContent = appState.settings.dailyGoal;
+            
+            const progress = Math.min((currentMinutes / appState.settings.dailyGoal) * 100, 100);
+            document.getElementById('goalProgressBar').style.width = progress + '%';
         }
 
         function drawPracticeChart(sessions) {
@@ -1451,14 +2017,14 @@
             });
         }
 
-        // Data Management
+        // Data Management with Notes
         function saveSession(item, duration) {
             const session = {
                 id: Date.now(),
                 item,
                 duration,
                 date: new Date().toISOString(),
-                notes: document.getElementById('sessionNotes').value.trim()
+                notes: appState.data.notes[item] || ''
             };
             
             appState.data.sessions.push(session);
@@ -1467,6 +2033,37 @@
             updatePracticeCount(item);
             
             saveData();
+        }
+
+        function saveData() {
+            const dataToSave = {
+                ...appState.data,
+                settings: appState.settings
+            };
+            localStorage.setItem('practiceManagerData', JSON.stringify(dataToSave));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('practiceManagerData');
+            if (saved) {
+                try {
+                    const loadedData = JSON.parse(saved);
+                    appState.data = {
+                        songs: loadedData.songs || [],
+                        exercises: loadedData.exercises || [],
+                        repertoire: loadedData.repertoire || [],
+                        routines: loadedData.routines || [],
+                        sessions: loadedData.sessions || [],
+                        notes: loadedData.notes || {}
+                    };
+                    appState.settings = {
+                        theme: loadedData.settings?.theme || 'dark',
+                        dailyGoal: loadedData.settings?.dailyGoal || 60
+                    };
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                }
+            }
         }
 
         function updatePracticeCount(itemName) {
@@ -1502,6 +2099,9 @@
             if (allItems.includes(currentValue)) {
                 select.value = currentValue;
             }
+            
+            // Load notes for selected item
+            loadSessionNotes();
         }
 
         function updateUI() {
@@ -1511,7 +2111,20 @@
             updateStatistics();
             updateTimerDisplay();
             updateTimerButtons();
+            setTheme(appState.settings.theme);
         }
+
+        // Initialize app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            initApp();
+            
+            // Watch for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (appState.settings.theme === 'system') {
+                    setTheme('system');
+                }
+            });
+        });
 
         // Utility Functions
         function formatTime(seconds) {
@@ -1540,24 +2153,6 @@
                 setTimeout(() => document.body.removeChild(toast), 300);
             }, 3000);
         }
-
-        function saveData() {
-            localStorage.setItem('practiceManagerData', JSON.stringify(appState.data));
-        }
-
-        function loadData() {
-            const saved = localStorage.getItem('practiceManagerData');
-            if (saved) {
-                try {
-                    appState.data = JSON.parse(saved);
-                } catch (e) {
-                    console.error('Error loading data:', e);
-                }
-            }
-        }
-
-        // Initialize app when page loads
-        document.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
 </html>
