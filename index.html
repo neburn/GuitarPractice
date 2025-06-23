@@ -465,7 +465,144 @@
             border-left: 4px solid #FFC107;
         }
 
-        /* Mobile Optimizations */
+        /* Library Layout */
+        .library-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--element-spacing);
+        }
+
+        .library-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: var(--element-spacing);
+        }
+
+        .library-tab-btn {
+            background: var(--card-background);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            border-radius: var(--corner-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .library-tab-btn.active {
+            background: var(--sidebar-active);
+            color: var(--text-primary);
+            border-color: var(--sidebar-active);
+        }
+
+        .library-tab-btn:hover {
+            background: var(--card-border);
+            color: var(--text-primary);
+        }
+
+        .count {
+            background: var(--card-border);
+            color: var(--text-secondary);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .library-tab-btn.active .count {
+            background: rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+
+        /* Items List */
+        .items-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .item-card {
+            background: var(--input-background);
+            border: 1px solid var(--card-border);
+            border-radius: var(--corner-radius);
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info h4 {
+            margin: 0 0 5px 0;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .item-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Routines Grid */
+        .routines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--element-spacing);
+        }
+
+        .routine-card {
+            background: var(--input-background);
+            border: 1px solid var(--card-border);
+            border-radius: var(--corner-radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .routine-card:hover {
+            border-color: var(--sidebar-active);
+            transform: translateY(-2px);
+        }
+
+        .routine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .routine-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .routine-duration {
+            background: var(--button-success);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .routine-items {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .routine-actions {
+            display: flex;
+            gap: 10px;
+        }
         @media (max-width: 768px) {
             .main-content {
                 padding: 10px;
@@ -565,6 +702,14 @@
                 <span>⏱️</span>
                 <span>Practice</span>
             </button>
+            <button class="tab-button" data-tab="library">
+                <span>📚</span>
+                <span>Library</span>
+            </button>
+            <button class="tab-button" data-tab="routines">
+                <span>📋</span>
+                <span>Routines</span>
+            </button>
             <button class="tab-button" data-tab="statistics">
                 <span>📊</span>
                 <span>Statistics</span>
@@ -624,6 +769,94 @@
                         <div class="input-group">
                             <textarea id="sessionNotes" class="form-textarea" rows="6" 
                                 placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Library Tab -->
+            <section id="library-tab" class="tab-content">
+                <div class="library-nav">
+                    <button class="library-tab-btn active" data-type="songs">
+                        <span>🎵</span>
+                        <span>Songs</span>
+                        <span class="count" id="songsCount">0</span>
+                    </button>
+                    <button class="library-tab-btn" data-type="exercises">
+                        <span>💪</span>
+                        <span>Exercises</span>
+                        <span class="count" id="exercisesCount">0</span>
+                    </button>
+                    <button class="library-tab-btn" data-type="repertoire">
+                        <span>⭐</span>
+                        <span>Repertoire</span>
+                        <span class="count" id="repertoireCount">0</span>
+                    </button>
+                </div>
+
+                <div class="library-layout">
+                    <!-- Add Item Form -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 id="addItemTitle">➕ Add New Song</h3>
+                        </div>
+                        <form id="addItemForm">
+                            <div class="input-group">
+                                <label for="itemName">Name *</label>
+                                <input type="text" id="itemName" class="form-input" required>
+                            </div>
+                            <div class="input-group" id="artistGroup">
+                                <label for="itemArtist">Artist</label>
+                                <input type="text" id="itemArtist" class="form-input">
+                            </div>
+                            <div class="input-group">
+                                <label for="itemTags">Tags</label>
+                                <input type="text" id="itemTags" class="form-input" 
+                                    placeholder="e.g., blues, fingerpicking, beginner">
+                            </div>
+                            <div class="input-group">
+                                <label for="itemNotes">Notes</label>
+                                <textarea id="itemNotes" class="form-textarea" rows="3"></textarea>
+                            </div>
+                            <div class="input-group">
+                                <button type="submit" class="btn btn-success">
+                                    <span>➕</span>
+                                    <span id="addBtnText">Add Song</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Items List -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 id="itemsListTitle">🎵 Your Songs</h3>
+                        </div>
+                        <div class="items-list" id="itemsList">
+                            <div class="empty-state">
+                                <span class="empty-icon">🎵</span>
+                                <p>No songs yet. Add your first song!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Routines Tab -->
+            <section id="routines-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Practice Routines</h3>
+                        <button class="btn btn-primary" id="createRoutineBtn">
+                            <span>➕</span>
+                            <span>Create Routine</span>
+                        </button>
+                    </div>
+                    
+                    <div class="routines-grid" id="routinesGrid">
+                        <div class="empty-state">
+                            <span class="empty-icon">📋</span>
+                            <p>No routines yet. Create your first routine!</p>
                         </div>
                     </div>
                 </div>
@@ -714,6 +947,7 @@
         // Application State - Session notes worden hier opgeslagen
         const appState = {
             activeTab: 'practice',
+            currentLibraryType: 'songs',
             timer: {
                 isRunning: false,
                 isPaused: false,
@@ -725,6 +959,10 @@
                 dailyGoal: 60
             },
             data: {
+                songs: [],
+                exercises: [],
+                repertoire: [],
+                routines: [],
                 sessions: [],
                 notes: {} // Hier worden de session notes opgeslagen per item
             }
@@ -751,6 +989,14 @@
                 });
             });
 
+            // Library navigation
+            document.querySelectorAll('.library-tab-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const type = e.currentTarget.getAttribute('data-type');
+                    switchLibraryType(type);
+                });
+            });
+
             // Timer controls
             document.getElementById('startBtn').addEventListener('click', startTimer);
             document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
@@ -761,6 +1007,12 @@
 
             // Practice item selection - Load notes when item changes
             document.getElementById('practiceItem').addEventListener('change', loadSessionNotes);
+
+            // Add item form
+            document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
+
+            // Create routine
+            document.getElementById('createRoutineBtn').addEventListener('click', showCreateRoutineModal);
 
             // Settings
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
@@ -804,7 +1056,21 @@
             // Load tab-specific data
             if (tabId === 'statistics') {
                 updateStatistics();
+            } else if (tabId === 'library') {
+                updateLibraryDisplay();
+            } else if (tabId === 'routines') {
+                updateRoutinesDisplay();
             }
+        }
+
+        function switchLibraryType(type) {
+            document.querySelectorAll('.library-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-type="${type}"]`).classList.add('active');
+
+            appState.currentLibraryType = type;
+            updateLibraryDisplay();
         }
 
         // Timer Functions
@@ -979,9 +1245,9 @@
             const todayMinutes = Math.floor(todayTime / 60);
             const goalProgress = Math.min((todayMinutes / appState.settings.dailyGoal) * 100, 100);
             
-            document.getElementById('totalTime').textContent = formatTime(totalTime);
+            document.getElementById('totalTime').textContent = formatTimeStats(totalTime);
             document.getElementById('totalSessions').textContent = totalSessions;
-            document.getElementById('averageSession').textContent = formatTime(averageSession);
+            document.getElementById('averageSession').textContent = formatTimeStats(averageSession);
             document.getElementById('dailyGoalProgress').textContent = Math.round(goalProgress) + '%';
             
             updateDailyGoalDisplay(todayMinutes);
@@ -1055,6 +1321,10 @@
         function saveData() {
             // Alle data inclusief session notes opslaan naar localStorage
             const dataToSave = {
+                songs: appState.data.songs,
+                exercises: appState.data.exercises,
+                repertoire: appState.data.repertoire,
+                routines: appState.data.routines,
                 sessions: appState.data.sessions,
                 notes: appState.data.notes,  // Session notes per item
                 settings: appState.settings
@@ -1068,6 +1338,10 @@
             if (saved) {
                 try {
                     const loadedData = JSON.parse(saved);
+                    appState.data.songs = loadedData.songs || [];
+                    appState.data.exercises = loadedData.exercises || [];
+                    appState.data.repertoire = loadedData.repertoire || [];
+                    appState.data.routines = loadedData.routines || [];
                     appState.data.sessions = loadedData.sessions || [];
                     appState.data.notes = loadedData.notes || {};  // Session notes laden
                     appState.settings.dailyGoal = loadedData.settings?.dailyGoal || 60;
@@ -1082,7 +1356,172 @@
             updateStatistics();
             updateTimerDisplay();
             updateTimerButtons();
+            updateLibraryDisplay();
+            updateRoutinesDisplay();
+            updatePracticeItemsSelect();
             loadSessionNotes(); // Load notes for current/selected item
+        }
+
+        // Library Functions
+        function handleAddItem(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('itemName').value.trim();
+            const artist = document.getElementById('itemArtist').value.trim();
+            const tags = document.getElementById('itemTags').value.split(',').map(t => t.trim()).filter(t => t);
+            const notes = document.getElementById('itemNotes').value.trim();
+            
+            if (!name) {
+                showToast('Name is required!', 'error');
+                return;
+            }
+            
+            const item = {
+                id: Date.now(),
+                name,
+                artist,
+                tags,
+                notes,
+                practiceCount: 0,
+                addedDate: new Date().toISOString()
+            };
+            
+            appState.data[appState.currentLibraryType].push(item);
+            saveData();
+            updateLibraryDisplay();
+            updatePracticeItemsSelect();
+            
+            // Clear form
+            document.getElementById('addItemForm').reset();
+            
+            showToast(`${item.name} added successfully!`, 'success');
+        }
+
+        function updateLibraryDisplay() {
+            const type = appState.currentLibraryType;
+            const items = appState.data[type];
+            
+            // Update title and button text
+            const titles = {
+                songs: { title: '🎵 Your Songs', add: 'Add Song', form: '➕ Add New Song' },
+                exercises: { title: '💪 Your Exercises', add: 'Add Exercise', form: '➕ Add New Exercise' },
+                repertoire: { title: '⭐ Your Repertoire', add: 'Add Repertoire', form: '➕ Add New Repertoire' }
+            };
+            
+            document.getElementById('itemsListTitle').textContent = titles[type].title;
+            document.getElementById('addBtnText').textContent = titles[type].add;
+            document.getElementById('addItemTitle').textContent = titles[type].form;
+            
+            // Show/hide artist field for songs and repertoire
+            const artistGroup = document.getElementById('artistGroup');
+            artistGroup.style.display = (type === 'songs' || type === 'repertoire') ? 'block' : 'none';
+            
+            // Update counts
+            document.getElementById(type + 'Count').textContent = items.length;
+            
+            // Update items list
+            const itemsList = document.getElementById('itemsList');
+            
+            if (items.length === 0) {
+                itemsList.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">${type === 'songs' ? '🎵' : type === 'exercises' ? '💪' : '⭐'}</span>
+                        <p>No ${type} yet. Add your first ${type.slice(0, -1)}!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            itemsList.innerHTML = items.map(item => `
+                <div class="item-card">
+                    <div class="item-info">
+                        <h4>${item.name}</h4>
+                        <div class="item-meta">
+                            ${item.artist ? `${item.artist} • ` : ''}
+                            ${item.practiceCount} sessions
+                            ${item.tags.length ? ` • ${item.tags.join(', ')}` : ''}
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-primary btn-small" onclick="quickPractice('${item.name}', '${type}')">
+                            🎯 Practice
+                        </button>
+                        <button class="btn btn-danger btn-small" onclick="deleteItem(${item.id}, '${type}')">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteItem(id, type) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                appState.data[type] = appState.data[type].filter(item => item.id !== id);
+                saveData();
+                updateLibraryDisplay();
+                updatePracticeItemsSelect();
+                showToast('Item deleted', 'success');
+            }
+        }
+
+        function quickPractice(itemName, type) {
+            const typeLabels = {
+                songs: 'Song',
+                exercises: 'Exercise', 
+                repertoire: 'Repertoire'
+            };
+            
+            const displayName = `${typeLabels[type]}: ${itemName}`;
+            document.getElementById('practiceItem').value = displayName;
+            switchTab('practice');
+            showToast(`Ready to practice ${itemName}!`, 'success');
+        }
+
+        // Routines Functions
+        function showCreateRoutineModal() {
+            showToast('Create Routine feature coming soon!', 'info');
+        }
+
+        function updateRoutinesDisplay() {
+            const container = document.getElementById('routinesGrid');
+            
+            if (appState.data.routines.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">📋</span>
+                        <p>No routines yet. Create your first routine!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Routines functionality would go here
+        }
+
+        function updatePracticeItemsSelect() {
+            const select = document.getElementById('practiceItem');
+            const allItems = [
+                ...appState.data.songs.map(s => `Song: ${s.name}`),
+                ...appState.data.exercises.map(e => `Exercise: ${e.name}`),
+                ...appState.data.repertoire.map(r => `Repertoire: ${r.name}`),
+                ...appState.data.routines.map(r => `Routine: ${r.name}`)
+            ];
+            
+            // Add default options
+            const defaultOptions = [
+                'Scales', 'Chords', 'Songs', 'Technique', 'Theory'
+            ];
+            
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Select an item...</option>' + 
+                defaultOptions.map(item => `<option value="${item}">${item}</option>`).join('') +
+                (allItems.length > 0 ? '<optgroup label="Your Library">' + 
+                allItems.map(item => `<option value="${item}">${item}</option>`).join('') + 
+                '</optgroup>' : '');
+            
+            if (defaultOptions.includes(currentValue) || allItems.includes(currentValue)) {
+                select.value = currentValue;
+            }
         }
 
         // Utility Functions
@@ -1095,6 +1534,20 @@
                 return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             } else {
                 return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // Format time for statistics (shows hours and minutes in readable format)
+        function formatTimeStats(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            } else if (minutes > 0) {
+                return `${minutes}m`;
+            } else {
+                return `${seconds}s`;
             }
         }
 
@@ -1150,5 +1603,7 @@
             console.log('🔍 Session notes:', appState.data.notes);
         }
 
-        // Maak debug functie beschikbaar in console
+        // Maak alle functies globaal beschikbaar voor onclick handlers
+        window.quickPractice = quickPractice;
+        window.deleteItem = deleteItem;
         window.debugShowData = debugShowData;
