@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Manager</title>
     
     <!-- PWA Configuration -->
@@ -22,7 +22,11 @@
             --button-primary: #4A90E2;
             --button-primary-hover: #357ABD;
             --button-success: #28A745;
+            --button-success-hover: #218838;
             --button-danger: #DC3545;
+            --button-danger-hover: #C82333;
+            --button-warning: #FFC107;
+            --button-warning-hover: #E0A800;
             --text-primary: #FFFFFF;
             --text-secondary: #CCCCCC;
             --text-muted: #999999;
@@ -30,6 +34,7 @@
             --input-border: #5A5A5A;
             --corner-radius: 12px;
             --header-height: 80px;
+            --nav-height: 60px;
             --card-padding: 20px;
             --element-spacing: 15px;
             --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -98,10 +103,11 @@
         .tab-navigation {
             background: var(--sidebar);
             border-bottom: 1px solid var(--card-border);
-            padding: 8px 20px;
+            padding: 0 20px;
             display: flex;
             justify-content: center;
             gap: 5px;
+            padding: 8px 20px;
         }
 
         .tab-button {
@@ -195,10 +201,16 @@
 
         .timer-display.running {
             color: var(--button-success);
+            animation: pulse 2s infinite;
         }
 
         .timer-display.paused {
-            color: #FFC107;
+            color: var(--button-warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .timer-controls {
@@ -282,14 +294,26 @@
             color: var(--text-primary);
         }
 
+        .btn-success:hover:not(:disabled) {
+            background: var(--button-success-hover);
+        }
+
         .btn-danger {
             background: var(--button-danger);
             color: var(--text-primary);
         }
 
+        .btn-danger:hover:not(:disabled) {
+            background: var(--button-danger-hover);
+        }
+
         .btn-warning {
-            background: #FFC107;
-            color: #000;
+            background: var(--button-warning);
+            color: var(--text-primary);
+        }
+
+        .btn-warning:hover:not(:disabled) {
+            background: var(--button-warning-hover);
         }
 
         .btn-small {
@@ -382,6 +406,124 @@
             gap: 5px;
         }
 
+        /* Routines Grid */
+        .routines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--element-spacing);
+        }
+
+        .routine-card {
+            background: var(--input-background);
+            border: 1px solid var(--card-border);
+            border-radius: var(--corner-radius);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .routine-card:hover {
+            border-color: var(--sidebar-active);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
+        }
+
+        .routine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .routine-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .routine-duration {
+            background: var(--button-success);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .routine-items {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .routine-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Routine Progress */
+        .routine-progress-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+        }
+
+        .routine-progress-item.active {
+            background: var(--sidebar-active);
+            border-color: var(--sidebar-active);
+            color: var(--text-primary);
+        }
+
+        .routine-progress-item.completed {
+            background: var(--button-success);
+            border-color: var(--button-success);
+            color: var(--text-primary);
+            opacity: 0.7;
+        }
+
+        .routine-progress-item.break {
+            background: linear-gradient(90deg, var(--button-warning), #ff8f00);
+            border-color: var(--button-warning);
+            color: #000;
+        }
+
+        /* Routine Items in Creator */
+        .routine-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin: 4px 0;
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            background: var(--input-background);
+        }
+
+        .routine-item.break-item {
+            background: linear-gradient(90deg, var(--button-warning), #ff8f00);
+            color: #000;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            padding: 4px 8px;
+            margin-right: 8px;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .routine-item.dragging {
+            opacity: 0.5;
+        }
+
         /* Statistics */
         .stats-grid {
             display: grid;
@@ -440,27 +582,6 @@
             height: 100%;
             background: linear-gradient(90deg, var(--button-success), var(--sidebar-active));
             transition: width 0.3s ease;
-        }
-
-        /* Routines Grid */
-        .routines-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--element-spacing);
-        }
-
-        .routine-card {
-            background: var(--input-background);
-            border: 1px solid var(--card-border);
-            border-radius: var(--corner-radius);
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .routine-card:hover {
-            border-color: var(--sidebar-active);
-            transform: translateY(-2px);
         }
 
         /* Empty State */
@@ -567,28 +688,26 @@
         }
 
         .toast-warning {
-            border-left: 4px solid #FFC107;
+            border-left: 4px solid var(--button-warning);
         }
 
-        /* Mobile Optimizations */
+        /* Responsive */
         @media (max-width: 768px) {
-            .main-content {
-                padding: 10px;
-            }
-            
             .timer-layout,
             .library-layout {
                 grid-template-columns: 1fr;
-                gap: 10px;
             }
             
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
             }
             
             .routines-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 15px;
             }
             
             .tab-navigation {
@@ -603,70 +722,8 @@
             }
             
             .tab-button {
-                min-width: 90px;
+                min-width: 100px;
                 flex-shrink: 0;
-                padding: 10px 12px;
-                font-size: 11px;
-            }
-            
-            .timer-display {
-                font-size: 36px;
-            }
-            
-            .timer-display-container {
-                padding: 20px 10px;
-            }
-            
-            .timer-controls {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-            
-            .timer-controls .btn {
-                height: 50px;
-                font-size: 16px;
-            }
-            
-            .btn {
-                min-height: 44px;
-                touch-action: manipulation;
-            }
-            
-            .form-input,
-            .form-select,
-            .form-textarea {
-                min-height: 44px;
-                font-size: 16px;
-            }
-            
-            .toast {
-                top: 10px;
-                right: 10px;
-                left: 10px;
-                min-width: auto;
-            }
-            
-            .library-nav {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            
-            .library-tab-btn {
-                flex: 1;
-                min-width: 80px;
-                padding: 10px 8px;
-                font-size: 11px;
-            }
-            
-            .item-card {
-                flex-direction: column;
-                gap: 10px;
-                text-align: center;
-            }
-            
-            .item-actions {
-                justify-content: center;
-                width: 100%;
             }
         }
     </style>
@@ -762,6 +819,20 @@
                                 placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
                         </div>
                     </div>
+
+                    <!-- Routine Progress (when practicing routine) -->
+                    <div class="card" id="routineProgressCard" style="display: none;">
+                        <div class="card-header">
+                            <h3>📋 Routine Progress</h3>
+                            <span id="routineProgress">0 / 0</span>
+                        </div>
+                        <div id="routineItemsProgress" style="padding: 0 20px;"></div>
+                        <div style="padding: 0 20px 20px;">
+                            <button class="btn btn-warning" id="skipItemBtn" style="width: 100%;">
+                                ⏭️ Skip Current Item
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -847,7 +918,7 @@
                     <div class="routines-grid" id="routinesGrid">
                         <div class="empty-state">
                             <span class="empty-icon">📋</span>
-                            <p>Routines feature coming soon!</p>
+                            <p>No routines yet. Create your first routine!</p>
                         </div>
                     </div>
                 </div>
@@ -893,6 +964,53 @@
         </main>
     </div>
 
+    <!-- Create Routine Modal -->
+    <div id="createRoutineModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Create New Routine</h3>
+                <button class="btn-close" id="closeCreateRoutine">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label for="routineName">Routine Name</label>
+                    <input type="text" id="routineName" class="form-input" placeholder="e.g., Morning Warmup" required>
+                </div>
+                
+                <div class="input-group">
+                    <label>Add Items to Routine</label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <select id="routineItemSelect" class="form-select" style="flex: 1;">
+                            <option value="">Select an item to add...</option>
+                        </select>
+                        <input type="number" id="itemDuration" class="form-input" placeholder="Minutes" 
+                               style="width: 100px;" min="1" max="120" value="5">
+                        <button type="button" class="btn btn-primary" id="addToRoutineBtn">Add</button>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-warning" id="addBreakBtn">
+                            ☕ Add Break
+                        </button>
+                        <input type="number" id="breakDuration" class="form-input" placeholder="Minutes" 
+                               style="width: 100px;" min="1" max="60" value="5">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Routine Items</label>
+                    <div id="routineItemsList" style="min-height: 150px; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px; background: var(--background);">
+                        <p style="color: var(--text-muted); text-align: center; margin: 50px 0;">No items added yet</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                    <button class="btn btn-danger" id="cancelCreateRoutine">Cancel</button>
+                    <button class="btn btn-success" id="saveRoutine">Save Routine</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
@@ -902,8 +1020,27 @@
             </div>
             <div class="modal-body">
                 <div class="input-group">
+                    <label for="themeSelect">Theme</label>
+                    <select id="themeSelect" class="form-select">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                        <option value="system">System</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
                     <label for="dailyGoalInput">Daily Practice Goal (minutes)</label>
                     <input type="number" id="dailyGoalInput" class="form-input" min="5" max="480" value="60">
+                </div>
+                
+                <div class="input-group">
+                    <label>Data Management</label>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" id="exportDataBtn">📤 Export Data</button>
+                        <button class="btn btn-primary" id="importDataBtn">📥 Import Data</button>
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                        <button class="btn btn-danger" id="clearDataBtn">🗑️ Clear All Data</button>
+                    </div>
                 </div>
                 
                 <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
@@ -935,8 +1072,6 @@
     </div>
 
     <script>
-        console.log('🚀 Starting Practice Manager...');
-
         // Application State
         const appState = {
             activeTab: 'practice',
@@ -946,9 +1081,13 @@
                 isPaused: false,
                 startTime: null,
                 elapsed: 0,
-                currentItem: null
+                currentItem: null,
+                currentRoutine: null,
+                currentRoutineIndex: 0,
+                routineItemStartTime: null
             },
             settings: {
+                theme: 'dark',
                 dailyGoal: 60
             },
             data: {
@@ -958,28 +1097,23 @@
                 routines: [],
                 sessions: [],
                 notes: {}
-            }
+            },
+            currentRoutine: { name: '', items: [] }
         };
 
         let timerInterval = null;
 
         // Initialize App
         function initApp() {
-            console.log('📱 Initializing app...');
-            try {
-                loadData();
-                setupEventListeners();
-                updateUI();
-                console.log('✅ App initialized successfully');
-            } catch (error) {
-                console.error('❌ Error initializing app:', error);
-            }
+            console.log('🚀 Starting Practice Manager...');
+            loadData();
+            setupEventListeners();
+            updateUI();
+            console.log('✅ App initialized successfully');
         }
 
         // Event Listeners
         function setupEventListeners() {
-            console.log('🔧 Setting up event listeners...');
-
             // Tab navigation
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -1000,22 +1134,24 @@
             document.getElementById('startBtn').addEventListener('click', startTimer);
             document.getElementById('pauseBtn').addEventListener('click', pauseTimer);
             document.getElementById('stopBtn').addEventListener('click', stopTimer);
+            document.getElementById('skipItemBtn').addEventListener('click', skipRoutineItem);
 
             // Session notes
             document.getElementById('sessionNotes').addEventListener('input', saveSessionNotes);
             document.getElementById('practiceItem').addEventListener('change', loadSessionNotes);
 
-            // Library form
+            // Add item form
             document.getElementById('addItemForm').addEventListener('submit', handleAddItem);
-
-            // Create routine
-            document.getElementById('createRoutineBtn').addEventListener('click', showCreateRoutineModal);
 
             // Settings
             document.getElementById('settingsBtn').addEventListener('click', showSettingsModal);
             document.getElementById('closeSettings').addEventListener('click', hideSettingsModal);
             document.getElementById('cancelSettings').addEventListener('click', hideSettingsModal);
             document.getElementById('saveSettings').addEventListener('click', saveSettings);
+            document.getElementById('exportDataBtn').addEventListener('click', exportData);
+            document.getElementById('importDataBtn').addEventListener('click', () => document.getElementById('importFile').click());
+            document.getElementById('importFile').addEventListener('change', importData);
+            document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
 
             // Daily goal
             document.getElementById('editDailyGoal').addEventListener('click', showDailyGoalModal);
@@ -1023,21 +1159,31 @@
             document.getElementById('cancelDailyGoal').addEventListener('click', hideDailyGoalModal);
             document.getElementById('saveDailyGoal').addEventListener('click', saveDailyGoal);
 
+            // Create routine
+            document.getElementById('createRoutineBtn').addEventListener('click', showCreateRoutineModal);
+            document.getElementById('closeCreateRoutine').addEventListener('click', hideCreateRoutineModal);
+            document.getElementById('cancelCreateRoutine').addEventListener('click', hideCreateRoutineModal);
+            document.getElementById('saveRoutine').addEventListener('click', saveRoutine);
+            document.getElementById('addToRoutineBtn').addEventListener('click', addItemToRoutine);
+            document.getElementById('addBreakBtn').addEventListener('click', addBreakToRoutine);
+
             // Modal close on outside click
             document.addEventListener('click', (e) => {
                 if (e.target.classList.contains('modal')) {
                     hideSettingsModal();
+                    hideCreateRoutineModal();
                     hideDailyGoalModal();
                 }
             });
 
-            console.log('✅ Event listeners setup complete');
+            // Theme handling
+            document.getElementById('themeSelect').addEventListener('change', (e) => {
+                setTheme(e.target.value);
+            });
         }
 
         // Tab Management
         function switchTab(tabId) {
-            console.log('🔄 Switching to tab:', tabId);
-            
             // Update navigation
             document.querySelectorAll('.tab-button').forEach(btn => {
                 btn.classList.remove('active');
@@ -1055,14 +1201,14 @@
             // Load tab-specific data
             if (tabId === 'statistics') {
                 updateStatistics();
+            } else if (tabId === 'routines') {
+                updateRoutinesDisplay();
             } else if (tabId === 'library') {
                 updateLibraryDisplay();
             }
         }
 
         function switchLibraryType(type) {
-            console.log('📚 Switching library type to:', type);
-            
             document.querySelectorAll('.library-tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -1076,11 +1222,9 @@
         function startTimer() {
             const selectedItem = document.getElementById('practiceItem').value;
             if (!selectedItem) {
-                showToast('Please select what you are practicing!', 'warning');
+                showToast('Please select an item to practice!', 'warning');
                 return;
             }
-
-            console.log('▶️ Starting timer for:', selectedItem);
 
             if (appState.timer.isPaused) {
                 // Resume
@@ -1091,6 +1235,22 @@
                 appState.timer.startTime = Date.now();
                 appState.timer.elapsed = 0;
                 appState.timer.currentItem = selectedItem;
+                
+                // Check if it's a routine
+                if (selectedItem.startsWith('Routine: ')) {
+                    const routineName = selectedItem.substring(9);
+                    const routine = appState.data.routines.find(r => r.name === routineName);
+                    if (routine) {
+                        appState.timer.currentRoutine = routine;
+                        appState.timer.currentRoutineIndex = 0;
+                        appState.timer.routineItemStartTime = Date.now();
+                        updateRoutineProgress();
+                    }
+                } else {
+                    appState.timer.currentRoutine = null;
+                    document.getElementById('routineProgressCard').style.display = 'none';
+                }
+                
                 loadSessionNotes();
             }
 
@@ -1102,7 +1262,6 @@
         }
 
         function pauseTimer() {
-            console.log('⏸️ Pausing timer');
             appState.timer.isRunning = false;
             appState.timer.isPaused = true;
             
@@ -1117,7 +1276,6 @@
 
         function stopTimer() {
             const sessionDuration = Math.floor(appState.timer.elapsed / 1000);
-            console.log('⏹️ Stopping timer. Duration:', sessionDuration, 'seconds');
             
             appState.timer.isRunning = false;
             appState.timer.isPaused = false;
@@ -1137,16 +1295,93 @@
             appState.timer.elapsed = 0;
             appState.timer.startTime = null;
             appState.timer.currentItem = null;
+            appState.timer.currentRoutine = null;
+            appState.timer.currentRoutineIndex = 0;
+            appState.timer.routineItemStartTime = null;
             
             updateTimerDisplay();
             updateTimerButtons();
+            updateRoutineProgress();
             updateStatistics();
+        }
+
+        function skipRoutineItem() {
+            if (!appState.timer.currentRoutine) return;
+            
+            // Save progress for current item if there was some time spent
+            const itemElapsed = Date.now() - appState.timer.routineItemStartTime;
+            if (itemElapsed >= 5000) { // At least 5 seconds
+                const currentItem = appState.timer.currentRoutine.items[appState.timer.currentRoutineIndex];
+                const sessionDuration = Math.floor(itemElapsed / 1000);
+                saveSession(`${currentItem.name} (from routine)`, sessionDuration);
+            }
+            
+            appState.timer.currentRoutineIndex++;
+            
+            if (appState.timer.currentRoutineIndex >= appState.timer.currentRoutine.items.length) {
+                // Routine completed
+                showToast('🎉 Routine completed!', 'success');
+                stopTimer();
+            } else {
+                appState.timer.routineItemStartTime = Date.now();
+                updateRoutineProgress();
+                showToast('Skipped to next item', 'info');
+            }
+        }
+
+        function updateRoutineProgress() {
+            const progressCard = document.getElementById('routineProgressCard');
+            const progressText = document.getElementById('routineProgress');
+            const progressItems = document.getElementById('routineItemsProgress');
+            
+            if (!appState.timer.currentRoutine) {
+                progressCard.style.display = 'none';
+                return;
+            }
+            
+            progressCard.style.display = 'block';
+            const current = appState.timer.currentRoutineIndex + 1;
+            const total = appState.timer.currentRoutine.items.length;
+            progressText.textContent = `${current} / ${total}`;
+            
+            // Show current and next items
+            progressItems.innerHTML = appState.timer.currentRoutine.items.map((item, index) => {
+                const isActive = index === appState.timer.currentRoutineIndex;
+                const isDone = index < appState.timer.currentRoutineIndex;
+                let classes = 'routine-progress-item';
+                
+                if (isActive) classes += ' active';
+                if (isDone) classes += ' completed';
+                if (item.type === 'break') classes += ' break';
+                
+                const icon = isDone ? '✅' : isActive ? '▶️' : '⏸️';
+                
+                return `
+                    <div class="${classes}">
+                        <span style="margin-right: 8px;">${icon}</span>
+                        <span style="flex: 1;">${item.name}</span>
+                        <span style="font-size: 11px; opacity: 0.8;">${item.duration}m</span>
+                    </div>
+                `;
+            }).join('');
         }
 
         function updateTimer() {
             if (appState.timer.isRunning && appState.timer.startTime) {
                 appState.timer.elapsed = Date.now() - appState.timer.startTime;
                 updateTimerDisplay();
+                
+                // Check for routine item time completion
+                if (appState.timer.currentRoutine) {
+                    const currentItem = appState.timer.currentRoutine.items[appState.timer.currentRoutineIndex];
+                    const itemElapsed = Date.now() - appState.timer.routineItemStartTime;
+                    const itemDurationMs = currentItem.duration * 60 * 1000;
+                    
+                    if (itemElapsed >= itemDurationMs) {
+                        // Auto-advance to next item
+                        skipRoutineItem();
+                    }
+                }
             }
         }
 
@@ -1191,36 +1426,9 @@
             }
         }
 
-        // Session Notes Functions
-        function saveSessionNotes() {
-            const notes = document.getElementById('sessionNotes').value;
-            const currentItem = appState.timer.currentItem || document.getElementById('practiceItem').value || 'general';
-            
-            appState.data.notes[currentItem] = notes;
-            saveData();
-            
-            // Visual feedback
-            const status = document.getElementById('notesStatus');
-            status.textContent = '✓ Saved';
-            status.style.color = 'var(--button-success)';
-            setTimeout(() => {
-                status.textContent = '';
-            }, 2000);
-            
-            console.log('📝 Session notes saved for:', currentItem);
-        }
-
-        function loadSessionNotes() {
-            const currentItem = appState.timer.currentItem || document.getElementById('practiceItem').value || 'general';
-            const notes = appState.data.notes[currentItem] || '';
-            document.getElementById('sessionNotes').value = notes;
-            console.log('📖 Session notes loaded for:', currentItem);
-        }
-
         // Library Functions
         function handleAddItem(e) {
             e.preventDefault();
-            console.log('➕ Adding new item to library...');
             
             const name = document.getElementById('itemName').value.trim();
             const artist = document.getElementById('itemArtist').value.trim();
@@ -1251,14 +1459,11 @@
             document.getElementById('addItemForm').reset();
             
             showToast(`${item.name} added successfully!`, 'success');
-            console.log('✅ Item added:', item);
         }
 
         function updateLibraryDisplay() {
             const type = appState.currentLibraryType;
             const items = appState.data[type];
-            
-            console.log('📚 Updating library display for:', type, '- Items:', items.length);
             
             // Update title and button text
             const titles = {
@@ -1267,10 +1472,9 @@
                 repertoire: { title: '⭐ Your Repertoire', add: 'Add Repertoire', form: '➕ Add New Repertoire' }
             };
             
-            const titleInfo = titles[type];
-            document.getElementById('itemsListTitle').textContent = titleInfo.title;
-            document.getElementById('addBtnText').textContent = titleInfo.add;
-            document.getElementById('addItemTitle').textContent = titleInfo.form;
+            document.getElementById('itemsListTitle').textContent = titles[type].title;
+            document.getElementById('addBtnText').textContent = titles[type].add;
+            document.getElementById('addItemTitle').textContent = titles[type].form;
             
             // Show/hide artist field for songs and repertoire
             const artistGroup = document.getElementById('artistGroup');
@@ -1314,53 +1518,436 @@
             `).join('');
         }
 
-        function deleteItem(id, type) {
-            if (confirm('Are you sure you want to delete this item?')) {
-                console.log('🗑️ Deleting item:', id, 'from', type);
-                appState.data[type] = appState.data[type].filter(item => item.id !== id);
-                saveData();
-                updateLibraryDisplay();
-                updatePracticeItemsSelect();
-                showToast('Item deleted', 'success');
-            }
+        // Routine Functions
+        function showCreateRoutineModal() {
+            document.getElementById('createRoutineModal').style.display = 'block';
+            updateRoutineItemsSelect();
+            clearRoutineForm();
         }
 
-        function quickPractice(itemName, type) {
-            const typeLabels = {
-                songs: 'Song',
-                exercises: 'Exercise', 
-                repertoire: 'Repertoire'
-            };
-            
-            const displayName = `${typeLabels[type]}: ${itemName}`;
-            document.getElementById('practiceItem').value = displayName;
-            switchTab('practice');
-            showToast(`Ready to practice ${itemName}!`, 'success');
-            console.log('🎯 Quick practice selected:', displayName);
+        function hideCreateRoutineModal() {
+            document.getElementById('createRoutineModal').style.display = 'none';
         }
 
-        function updatePracticeItemsSelect() {
-            const select = document.getElementById('practiceItem');
+        function updateRoutineItemsSelect() {
+            const select = document.getElementById('routineItemSelect');
             const allItems = [
-                ...appState.data.songs.map(s => `Song: ${s.name}`),
-                ...appState.data.exercises.map(e => `Exercise: ${e.name}`),
-                ...appState.data.repertoire.map(r => `Repertoire: ${r.name}`)
+                ...appState.data.songs.map(s => ({ name: s.name, type: 'Song' })),
+                ...appState.data.exercises.map(e => ({ name: e.name, type: 'Exercise' })),
+                ...appState.data.repertoire.map(r => ({ name: r.name, type: 'Repertoire' }))
             ];
             
-            const currentValue = select.value;
+            select.innerHTML = '<option value="">Select an item to add...</option>' + 
+                allItems.map(item => `<option value="${item.type}: ${item.name}">${item.type}: ${item.name}</option>`).join('');
+        }
+
+        function addItemToRoutine() {
+            const select = document.getElementById('routineItemSelect');
+            const selectedItem = select.value;
+            const duration = parseInt(document.getElementById('itemDuration').value) || 5;
             
-            if (allItems.length === 0) {
-                select.innerHTML = '<option value="">Add items to your library first...</option>';
-            } else {
-                select.innerHTML = '<option value="">Select an item...</option>' + 
-                    allItems.map(item => `<option value="${item}">${item}</option>`).join('');
-                
-                if (allItems.includes(currentValue)) {
-                    select.value = currentValue;
-                }
+            if (!selectedItem) {
+                showToast('Please select an item to add', 'warning');
+                return;
             }
             
-            console.log('📋 Practice items updated. Total items:', allItems.length);
+            if (duration < 1 || duration > 120) {
+                showToast('Duration must be between 1 and 120 minutes', 'error');
+                return;
+            }
+            
+            appState.currentRoutine.items.push({
+                name: selectedItem,
+                duration: duration,
+                type: 'item'
+            });
+            
+            updateRoutineItemsDisplay();
+            select.value = '';
+            document.getElementById('itemDuration').value = '5';
+        }
+
+        function addBreakToRoutine() {
+            const duration = parseInt(document.getElementById('breakDuration').value) || 5;
+            
+            if (duration < 1 || duration > 60) {
+                showToast('Break duration must be between 1 and 60 minutes', 'error');
+                return;
+            }
+            
+            appState.currentRoutine.items.push({
+                name: `☕ Break (${duration} min)`,
+                duration: duration,
+                type: 'break'
+            });
+            
+            updateRoutineItemsDisplay();
+        }
+
+        function updateRoutineItemsDisplay() {
+            const container = document.getElementById('routineItemsList');
+            
+            if (appState.currentRoutine.items.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted); text-align: center; margin: 50px 0;">No items added yet</p>';
+                return;
+            }
+            
+            const totalDuration = appState.currentRoutine.items.reduce((sum, item) => sum + item.duration, 0);
+            
+            container.innerHTML = `
+                <div style="margin-bottom: 15px; padding: 10px; background: var(--input-background); border-radius: 8px; text-align: center;">
+                    <strong>Total Duration: ${Math.floor(totalDuration / 60)}h ${totalDuration % 60}m</strong>
+                </div>
+                ${appState.currentRoutine.items.map((item, index) => `
+                    <div class="routine-item ${item.type === 'break' ? 'break-item' : ''}" draggable="true" data-index="${index}">
+                        <span class="drag-handle" title="Drag to reorder">⋮⋮</span>
+                        <span style="flex: 1;">${index + 1}. ${item.name} (${item.duration}m)</span>
+                        <button class="btn btn-danger btn-small" onclick="removeFromRoutine(${index})" title="Remove item">×</button>
+                    </div>
+                `).join('')}
+            `;
+            
+            // Add drag and drop functionality
+            setupDragAndDrop();
+        }
+
+        function setupDragAndDrop() {
+            const items = document.querySelectorAll('.routine-item[draggable="true"]');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.dataset.index);
+                    e.target.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', (e) => {
+                    e.target.classList.remove('dragging');
+                });
+                
+                item.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const targetIndex = parseInt(e.target.closest('.routine-item').dataset.index);
+                    
+                    if (draggedIndex !== targetIndex) {
+                        // Reorder items
+                        const items = appState.currentRoutine.items;
+                        const draggedItem = items[draggedIndex];
+                        items.splice(draggedIndex, 1);
+                        items.splice(targetIndex, 0, draggedItem);
+                        
+                        updateRoutineItemsDisplay();
+                    }
+                });
+            });
+        }
+
+        function removeFromRoutine(index) {
+            appState.currentRoutine.items.splice(index, 1);
+            updateRoutineItemsDisplay();
+        }
+
+        function saveRoutine() {
+            const name = document.getElementById('routineName').value.trim();
+            
+            if (!name) {
+                showToast('Please enter a routine name', 'error');
+                return;
+            }
+            
+            if (appState.currentRoutine.items.length === 0) {
+                showToast('Please add at least one item to the routine', 'error');
+                return;
+            }
+            
+            // Check for duplicate name
+            if (appState.data.routines.some(r => r.name === name)) {
+                showToast('A routine with this name already exists', 'error');
+                return;
+            }
+            
+            const routine = {
+                id: Date.now(),
+                name,
+                items: [...appState.currentRoutine.items],
+                createdDate: new Date().toISOString()
+            };
+            
+            appState.data.routines.push(routine);
+            saveData();
+            updateRoutinesDisplay();
+            updatePracticeItemsSelect();
+            hideCreateRoutineModal();
+            
+            showToast(`Routine "${name}" created!`, 'success');
+        }
+
+        function clearRoutineForm() {
+            document.getElementById('routineName').value = '';
+            appState.currentRoutine = { name: '', items: [] };
+            updateRoutineItemsDisplay();
+        }
+
+        function updateRoutinesDisplay() {
+            const container = document.getElementById('routinesGrid');
+            
+            if (appState.data.routines.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <span class="empty-icon">📋</span>
+                        <p>No routines yet. Create your first routine!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = appState.data.routines.map(routine => {
+                const totalDuration = routine.items.reduce((sum, item) => sum + item.duration, 0);
+                const totalHours = Math.floor(totalDuration / 60);
+                const totalMinutes = totalDuration % 60;
+                const durationText = totalHours > 0 ? `${totalHours}h ${totalMinutes}m` : `${totalMinutes}m`;
+                
+                return `
+                    <div class="routine-card" onclick="practiceRoutine('${routine.name.replace(/'/g, "\\'")}')">
+                        <div class="routine-header">
+                            <h3 class="routine-title">${routine.name}</h3>
+                            <span class="routine-duration">${durationText}</span>
+                        </div>
+                        <div class="routine-items">
+                            ${routine.items.length} items • Created ${new Date(routine.createdDate).toLocaleDateString()}
+                            <br>
+                            <small style="color: var(--text-muted);">
+                                ${routine.items.slice(0, 3).map(item => item.name.split(':').pop() || item.name).join(', ')}
+                                ${routine.items.length > 3 ? '...' : ''}
+                            </small>
+                        </div>
+                        <div class="routine-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-success btn-small" onclick="practiceRoutine('${routine.name.replace(/'/g, "\\'")}')">
+                                🎯 Practice
+                            </button>
+                            <button class="btn btn-primary btn-small" onclick="editRoutine(${routine.id})">
+                                ✏️ Edit
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteRoutine(${routine.id})">
+                                🗑️ Delete
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function practiceRoutine(routineName) {
+            document.getElementById('practiceItem').value = `Routine: ${routineName}`;
+            switchTab('practice');
+            showToast(`Ready to practice ${routineName}!`, 'success');
+        }
+
+        function editRoutine(id) {
+            const routine = appState.data.routines.find(r => r.id === id);
+            if (!routine) return;
+            
+            // Load routine into editor
+            document.getElementById('routineName').value = routine.name;
+            appState.currentRoutine = {
+                name: routine.name,
+                items: [...routine.items]
+            };
+            
+            // Mark as editing
+            appState.editingRoutineId = id;
+            
+            updateRoutineItemsDisplay();
+            updateRoutineItemsSelect();
+            showCreateRoutineModal();
+            
+            // Update save button text
+            document.getElementById('saveRoutine').innerHTML = '<span>💾</span><span>Update Routine</span>';
+        }
+
+        function deleteRoutine(id) {
+            const routine = appState.data.routines.find(r => r.id === id);
+            if (!routine) return;
+            
+            if (confirm(`Are you sure you want to delete the routine "${routine.name}"?`)) {
+                appState.data.routines = appState.data.routines.filter(r => r.id !== id);
+                saveData();
+                updateRoutinesDisplay();
+                updatePracticeItemsSelect();
+                showToast('Routine deleted', 'success');
+            }
+        }
+
+        // Session Notes Functions
+        function saveSessionNotes() {
+            const notes = document.getElementById('sessionNotes').value;
+            const currentItem = appState.timer.currentItem || document.getElementById('practiceItem').value || 'general';
+            
+            appState.data.notes[currentItem] = notes;
+            saveData();
+            
+            // Update status indicator
+            const status = document.getElementById('notesStatus');
+            status.textContent = '✓ Saved';
+            status.style.color = 'var(--button-success)';
+            setTimeout(() => {
+                status.textContent = '';
+            }, 2000);
+        }
+
+        function loadSessionNotes() {
+            const currentItem = appState.timer.currentItem || document.getElementById('practiceItem').value || 'general';
+            const notes = appState.data.notes[currentItem] || '';
+            document.getElementById('sessionNotes').value = notes;
+        }
+
+        // Settings Functions
+        function showSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'block';
+            document.getElementById('themeSelect').value = appState.settings.theme;
+            document.getElementById('dailyGoalInput').value = appState.settings.dailyGoal;
+        }
+
+        function hideSettingsModal() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function saveSettings() {
+            appState.settings.theme = document.getElementById('themeSelect').value;
+            appState.settings.dailyGoal = parseInt(document.getElementById('dailyGoalInput').value);
+            
+            setTheme(appState.settings.theme);
+            saveData();
+            updateStatistics();
+            hideSettingsModal();
+            showToast('Settings saved!', 'success');
+        }
+
+        function setTheme(theme) {
+            appState.settings.theme = theme;
+            
+            if (theme === 'system') {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            
+            if (theme === 'light') {
+                document.documentElement.style.setProperty('--background', '#FFFFFF');
+                document.documentElement.style.setProperty('--sidebar', '#F8F9FA');
+                document.documentElement.style.setProperty('--card-background', '#FFFFFF');
+                document.documentElement.style.setProperty('--card-border', '#DEE2E6');
+                document.documentElement.style.setProperty('--text-primary', '#212529');
+                document.documentElement.style.setProperty('--text-secondary', '#6C757D');
+                document.documentElement.style.setProperty('--text-muted', '#ADB5BD');
+                document.documentElement.style.setProperty('--input-background', '#FFFFFF');
+                document.documentElement.style.setProperty('--input-border', '#CED4DA');
+            } else {
+                // Dark theme (default)
+                document.documentElement.style.setProperty('--background', '#2D2D2D');
+                document.documentElement.style.setProperty('--sidebar', '#1E1E1E');
+                document.documentElement.style.setProperty('--card-background', '#3A3A3A');
+                document.documentElement.style.setProperty('--card-border', '#4A4A4A');
+                document.documentElement.style.setProperty('--text-primary', '#FFFFFF');
+                document.documentElement.style.setProperty('--text-secondary', '#CCCCCC');
+                document.documentElement.style.setProperty('--text-muted', '#999999');
+                document.documentElement.style.setProperty('--input-background', '#4A4A4A');
+                document.documentElement.style.setProperty('--input-border', '#5A5A5A');
+            }
+        }
+
+        function exportData() {
+            const dataToExport = {
+                ...appState.data,
+                settings: appState.settings,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `practice-manager-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showToast('Data exported successfully!', 'success');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    // Validate and merge data
+                    if (importedData.songs) appState.data.songs = importedData.songs;
+                    if (importedData.exercises) appState.data.exercises = importedData.exercises;
+                    if (importedData.repertoire) appState.data.repertoire = importedData.repertoire;
+                    if (importedData.routines) appState.data.routines = importedData.routines;
+                    if (importedData.sessions) appState.data.sessions = importedData.sessions;
+                    if (importedData.notes) appState.data.notes = importedData.notes;
+                    if (importedData.settings) appState.settings = { ...appState.settings, ...importedData.settings };
+                    
+                    saveData();
+                    updateUI();
+                    setTheme(appState.settings.theme);
+                    showToast('Data imported successfully!', 'success');
+                    
+                } catch (error) {
+                    showToast('Error importing data. Please check the file format.', 'error');
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset file input
+            event.target.value = '';
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                appState.data = {
+                    songs: [],
+                    exercises: [],
+                    repertoire: [],
+                    routines: [],
+                    sessions: [],
+                    notes: {}
+                };
+                saveData();
+                updateUI();
+                showToast('All data cleared', 'warning');
+            }
+        }
+
+        // Daily Goal Functions
+        function showDailyGoalModal() {
+            document.getElementById('dailyGoalModal').style.display = 'block';
+            document.getElementById('newDailyGoal').value = appState.settings.dailyGoal;
+        }
+
+        function hideDailyGoalModal() {
+            document.getElementById('dailyGoalModal').style.display = 'none';
+        }
+
+        function saveDailyGoal() {
+            const newGoal = parseInt(document.getElementById('newDailyGoal').value);
+            if (newGoal >= 5 && newGoal <= 480) {
+                appState.settings.dailyGoal = newGoal;
+                saveData();
+                updateStatistics();
+                hideDailyGoalModal();
+                showToast('Daily goal updated!', 'success');
+            } else {
+                showToast('Goal must be between 5 and 480 minutes', 'error');
+            }
         }
 
         // Statistics Functions
@@ -1389,14 +1976,12 @@
             const todayMinutes = Math.floor(todayTime / 60);
             const goalProgress = Math.min((todayMinutes / appState.settings.dailyGoal) * 100, 100);
             
-            document.getElementById('totalTime').textContent = formatTimeStats(totalTime);
+            document.getElementById('totalTime').textContent = formatTime(totalTime);
             document.getElementById('totalSessions').textContent = totalSessions;
-            document.getElementById('averageSession').textContent = formatTimeStats(averageSession);
+            document.getElementById('averageSession').textContent = formatTime(averageSession);
             document.getElementById('dailyGoalProgress').textContent = Math.round(goalProgress) + '%';
             
             updateDailyGoalDisplay(todayMinutes);
-            
-            console.log('📊 Statistics updated. Total sessions:', totalSessions);
         }
 
         function updateDailyGoalDisplay(currentMinutes) {
@@ -1407,53 +1992,7 @@
             document.getElementById('goalProgressBar').style.width = progress + '%';
         }
 
-        // Settings Functions
-        function showSettingsModal() {
-            document.getElementById('settingsModal').style.display = 'block';
-            document.getElementById('dailyGoalInput').value = appState.settings.dailyGoal;
-        }
-
-        function hideSettingsModal() {
-            document.getElementById('settingsModal').style.display = 'none';
-        }
-
-        function saveSettings() {
-            appState.settings.dailyGoal = parseInt(document.getElementById('dailyGoalInput').value);
-            saveData();
-            updateStatistics();
-            hideSettingsModal();
-            showToast('Settings saved!', 'success');
-        }
-
-        // Daily Goal Functions
-        function showDailyGoalModal() {
-            document.getElementById('dailyGoalModal').style.display = 'block';
-            document.getElementById('newDailyGoal').value = appState.settings.dailyGoal;
-        }
-
-        function hideDailyGoalModal() {
-            document.getElementById('dailyGoalModal').style.display = 'none';
-        }
-
-        function saveDailyGoal() {
-            const newGoal = parseInt(document.getElementById('newDailyGoal').value);
-            if (newGoal >= 5 && newGoal <= 480) {
-                appState.settings.dailyGoal = newGoal;
-                saveData();
-                updateStatistics();
-                hideDailyGoalModal();
-                showToast('Daily goal updated!', 'success');
-            } else {
-                showToast('Goal must be between 5 and 480 minutes', 'error');
-            }
-        }
-
-        // Routine Functions (placeholder)
-        function showCreateRoutineModal() {
-            showToast('Routines feature coming soon!', 'info');
-        }
-
-        // Data Management
+        // Data Management Functions
         function saveSession(item, duration) {
             const session = {
                 id: Date.now(),
@@ -1464,22 +2003,19 @@
             };
             
             appState.data.sessions.push(session);
+            
+            // Update practice count for the item
+            updatePracticeCount(item);
+            
             saveData();
-            console.log('💾 Session saved:', session);
         }
 
         function saveData() {
             const dataToSave = {
-                songs: appState.data.songs,
-                exercises: appState.data.exercises,
-                repertoire: appState.data.repertoire,
-                routines: appState.data.routines,
-                sessions: appState.data.sessions,
-                notes: appState.data.notes,
+                ...appState.data,
                 settings: appState.settings
             };
             localStorage.setItem('practiceManagerData', JSON.stringify(dataToSave));
-            console.log('💾 Data saved to localStorage');
         }
 
         function loadData() {
@@ -1487,32 +2023,98 @@
             if (saved) {
                 try {
                     const loadedData = JSON.parse(saved);
-                    appState.data.songs = loadedData.songs || [];
-                    appState.data.exercises = loadedData.exercises || [];
-                    appState.data.repertoire = loadedData.repertoire || [];
-                    appState.data.routines = loadedData.routines || [];
-                    appState.data.sessions = loadedData.sessions || [];
-                    appState.data.notes = loadedData.notes || {};
-                    appState.settings.dailyGoal = loadedData.settings?.dailyGoal || 60;
-                    console.log('📂 Data loaded from localStorage');
+                    appState.data = {
+                        songs: loadedData.songs || [],
+                        exercises: loadedData.exercises || [],
+                        repertoire: loadedData.repertoire || [],
+                        routines: loadedData.routines || [],
+                        sessions: loadedData.sessions || [],
+                        notes: loadedData.notes || {}
+                    };
+                    appState.settings = {
+                        theme: loadedData.settings?.theme || 'dark',
+                        dailyGoal: loadedData.settings?.dailyGoal || 60
+                    };
                 } catch (e) {
-                    console.error('❌ Error loading data:', e);
+                    console.error('Error loading data:', e);
                 }
+            }
+        }
+
+        function updatePracticeCount(itemName) {
+            const [type, name] = itemName.split(': ');
+            const typeMap = {
+                'Song': 'songs',
+                'Exercise': 'exercises', 
+                'Repertoire': 'repertoire'
+            };
+            
+            const dataType = typeMap[type];
+            if (dataType && appState.data[dataType]) {
+                const item = appState.data[dataType].find(i => i.name === name);
+                if (item) {
+                    item.practiceCount = (item.practiceCount || 0) + 1;
+                }
+            }
+        }
+
+        function updatePracticeItemsSelect() {
+            const select = document.getElementById('practiceItem');
+            const allItems = [
+                ...appState.data.songs.map(s => `Song: ${s.name}`),
+                ...appState.data.exercises.map(e => `Exercise: ${e.name}`),
+                ...appState.data.repertoire.map(r => `Repertoire: ${r.name}`),
+                ...appState.data.routines.map(r => `Routine: ${r.name}`)
+            ];
+            
+            const currentValue = select.value;
+            
+            if (allItems.length === 0) {
+                select.innerHTML = '<option value="">Add items to your library first...</option>';
             } else {
-                console.log('📂 No saved data found, starting fresh');
+                select.innerHTML = '<option value="">Select an item...</option>' + 
+                    allItems.map(item => `<option value="${item}">${item}</option>`).join('');
+                
+                if (allItems.includes(currentValue)) {
+                    select.value = currentValue;
+                }
             }
         }
 
         function updateUI() {
+            updateLibraryDisplay();
+            updateRoutinesDisplay();
+            updatePracticeItemsSelect();
             updateStatistics();
             updateTimerDisplay();
             updateTimerButtons();
-            updatePracticeItemsSelect();
-            updateLibraryDisplay();
-            loadSessionNotes();
+            setTheme(appState.settings.theme);
         }
 
         // Utility Functions
+        function deleteItem(id, type) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                appState.data[type] = appState.data[type].filter(item => item.id !== id);
+                saveData();
+                updateLibraryDisplay();
+                updatePracticeItemsSelect();
+                showToast('Item deleted', 'success');
+            }
+        }
+
+        function quickPractice(itemName, type) {
+            const typeLabels = {
+                songs: 'Song',
+                exercises: 'Exercise', 
+                repertoire: 'Repertoire'
+            };
+            
+            const displayName = `${typeLabels[type]}: ${itemName}`;
+            document.getElementById('practiceItem').value = displayName;
+            switchTab('practice');
+            showToast(`Ready to practice ${itemName}!`, 'success');
+        }
+
         function formatTime(seconds) {
             const hours = Math.floor(seconds / 3600);
             const minutes = Math.floor((seconds % 3600) / 60);
@@ -1522,19 +2124,6 @@
                 return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
             } else {
                 return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-        }
-
-        function formatTimeStats(seconds) {
-            const hours = Math.floor(seconds / 3600);
-            const minutes = Math.floor((seconds % 3600) / 60);
-            
-            if (hours > 0) {
-                return `${hours}h ${minutes}m`;
-            } else if (minutes > 0) {
-                return `${minutes}m`;
-            } else {
-                return `${seconds}s`;
             }
         }
 
@@ -1555,48 +2144,63 @@
             }, 3000);
         }
 
-        // Debug function
-        function debugShowData() {
-            console.log('🔍 Current app state:', appState);
-            console.log('🔍 localStorage data:', localStorage.getItem('practiceManagerData'));
-            console.log('🔍 Session notes:', appState.data.notes);
-        }
-
-        // Make functions globally available
+        // Global functions for onclick handlers
         window.quickPractice = quickPractice;
         window.deleteItem = deleteItem;
-        window.debugShowData = debugShowData;
+        window.practiceRoutine = practiceRoutine;
+        window.editRoutine = editRoutine;
+        window.deleteRoutine = deleteRoutine;
+        window.removeFromRoutine = removeFromRoutine;
 
-        // Initialize app when DOM is ready
+        // Initialize app when page loads
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('🚀 DOM loaded, initializing app...');
             initApp();
+            
+            // Watch for system theme changes
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+                if (appState.settings.theme === 'system') {
+                    setTheme('system');
+                }
+            });
         });
 
-        // Mobile optimizations
-        function setupMobileOptimizations() {
-            // Prevent zoom on double tap
-            let lastTouchEnd = 0;
-            document.addEventListener('touchend', function (event) {
-                const now = (new Date()).getTime();
-                if (now - lastTouchEnd <= 300) {
-                    event.preventDefault();
-                }
-                lastTouchEnd = now;
-            }, false);
+        // Override save routine for editing
+        document.getElementById('saveRoutine').addEventListener('click', function() {
+            const name = document.getElementById('routineName').value.trim();
             
-            // Handle orientation changes
-            window.addEventListener('orientationchange', function() {
-                setTimeout(() => {
-                    updateUI();
-                }, 500);
-            });
-        }
-
-        // Setup mobile optimizations
-        if (window.innerWidth <= 768) {
-            setupMobileOptimizations();
-        }
+            if (!name) {
+                showToast('Please enter a routine name', 'error');
+                return;
+            }
+            
+            if (appState.currentRoutine.items.length === 0) {
+                showToast('Please add at least one item to the routine', 'error');
+                return;
+            }
+            
+            if (appState.editingRoutineId) {
+                // Update existing routine
+                const routine = appState.data.routines.find(r => r.id === appState.editingRoutineId);
+                if (routine) {
+                    routine.name = name;
+                    routine.items = [...appState.currentRoutine.items];
+                    
+                    saveData();
+                    updateRoutinesDisplay();
+                    updatePracticeItemsSelect();
+                    hideCreateRoutineModal();
+                    
+                    showToast(`Routine "${name}" updated!`, 'success');
+                    
+                    // Reset editing state
+                    delete appState.editingRoutineId;
+                    document.getElementById('saveRoutine').innerHTML = '<span>💾</span><span>Save Routine</span>';
+                }
+            } else {
+                // Create new routine (original logic)
+                saveRoutine();
+            }
+        });
     </script>
 </body>
 </html>
