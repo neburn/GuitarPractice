@@ -1,8 +1,30 @@
-<!DOCTYPE html>
+<!-- Practice Tab -->
+            <section id="practice-tab" class="tab-content active">
+                <!-- Timer Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⏱️ Practice Timer</h3>
+                        <span id="timerStatus">Ready</span>
+                    </div>
+                    
+                    <div class="timer-display-container">
+                        <div class="timer-display" id="timerDisplay">00:00:00</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="practiceItem">What are you practicing?</label>
+                        <select id="practiceItem" class="form-select">
+                            <option value="">Select an item...</option>
+                        </select>
+                    </div>
+
+                    <div class="timer-controls">
+                        <button class="btn btn-success" id="startBtn">
+                            <span>▶️</span<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
     <title>Practice Manager</title>
     
     <!-- PWA Configuration -->
@@ -10,6 +32,11 @@
     <meta name="theme-color" content="#4A90E2">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Practice Manager">
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/main.css">
+</head>-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Practice Manager">
     
     <style>
@@ -691,30 +718,63 @@
             border-left: 4px solid var(--button-warning);
         }
 
-        /* Responsive */
+        /* Mobile Optimizations */
         @media (max-width: 768px) {
+            /* Layout adjustments */
             .timer-layout,
             .library-layout {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .routines-grid {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
             
             .main-content {
-                padding: 15px;
+                padding: 10px;
             }
             
+            /* Header adjustments */
+            .app-header {
+                height: 60px;
+                padding: 0 15px;
+            }
+            
+            .app-title {
+                gap: 10px;
+            }
+            
+            .app-icon {
+                font-size: 24px;
+            }
+            
+            .title-text h1 {
+                font-size: 18px;
+            }
+            
+            .subtitle {
+                font-size: 12px;
+            }
+            
+            .header-actions .btn {
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+            
+            /* Navigation */
             .tab-navigation {
                 overflow-x: auto;
                 justify-content: flex-start;
                 scrollbar-width: none;
                 -ms-overflow-style: none;
+                padding: 5px 10px;
             }
             
             .tab-navigation::-webkit-scrollbar {
@@ -722,9 +782,370 @@
             }
             
             .tab-button {
-                min-width: 100px;
+                min-width: 80px;
                 flex-shrink: 0;
+                padding: 8px 12px;
+                font-size: 11px;
+                gap: 4px;
             }
+            
+            /* Cards */
+            .card {
+                margin-bottom: 10px;
+            }
+            
+            .card-header {
+                padding: 15px;
+            }
+            
+            .card-header h3 {
+                font-size: 16px;
+            }
+            
+            /* Timer display */
+            .timer-display-container {
+                padding: 20px 15px;
+            }
+            
+            .timer-display {
+                font-size: 32px;
+                margin-bottom: 5px;
+            }
+            
+            .timer-controls {
+                grid-template-columns: 1fr;
+                gap: 8px;
+                padding: 15px;
+                padding-top: 0;
+            }
+            
+            .timer-controls .btn {
+                height: 48px;
+                font-size: 14px;
+                touch-action: manipulation;
+            }
+            
+            /* Forms */
+            .input-group {
+                margin-bottom: 12px;
+                padding: 0 15px;
+            }
+            
+            .form-input,
+            .form-select,
+            .form-textarea {
+                min-height: 44px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: 12px;
+            }
+            
+            .btn {
+                min-height: 44px;
+                touch-action: manipulation;
+                font-size: 12px;
+            }
+            
+            .btn-small {
+                min-height: 36px;
+                padding: 8px 12px;
+                font-size: 11px;
+            }
+            
+            /* Library */
+            .library-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+            
+            .library-tab-btn {
+                flex: 1;
+                min-width: 80px;
+                padding: 10px 8px;
+                font-size: 11px;
+            }
+            
+            .count {
+                padding: 1px 6px;
+                font-size: 9px;
+            }
+            
+            /* Items */
+            .items-list {
+                max-height: 300px;
+            }
+            
+            .item-card {
+                flex-direction: column;
+                gap: 10px;
+                text-align: left;
+                padding: 12px;
+            }
+            
+            .item-info h4 {
+                font-size: 13px;
+            }
+            
+            .item-meta {
+                font-size: 10px;
+            }
+            
+            .item-actions {
+                justify-content: stretch;
+                width: 100%;
+                gap: 8px;
+            }
+            
+            .item-actions .btn {
+                flex: 1;
+            }
+            
+            /* Routines */
+            .routine-card {
+                padding: 15px;
+            }
+            
+            .routine-title {
+                font-size: 14px;
+            }
+            
+            .routine-duration {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+            
+            .routine-items {
+                font-size: 11px;
+            }
+            
+            .routine-actions {
+                flex-wrap: wrap;
+                gap: 6px;
+            }
+            
+            .routine-actions .btn {
+                flex: 1;
+                min-width: auto;
+            }
+            
+            /* Statistics */
+            .stat-card {
+                padding: 15px;
+            }
+            
+            .stat-value {
+                font-size: 20px;
+            }
+            
+            .stat-label {
+                font-size: 11px;
+            }
+            
+            .goal-current {
+                font-size: 28px;
+            }
+            
+            .goal-target {
+                font-size: 14px;
+            }
+            
+            /* Modals */
+            .modal-content {
+                width: 95vw;
+                max-width: none;
+                margin: 10px;
+                max-height: 90vh;
+            }
+            
+            .modal-header {
+                padding: 15px;
+            }
+            
+            .modal-header h3 {
+                font-size: 16px;
+            }
+            
+            .modal-body {
+                padding: 15px;
+            }
+            
+            .btn-close {
+                width: 32px;
+                height: 32px;
+                font-size: 20px;
+            }
+            
+            /* Routine creator */
+            .routine-item {
+                padding: 8px;
+                flex-wrap: wrap;
+            }
+            
+            .drag-handle {
+                font-size: 14px;
+                padding: 4px 6px;
+            }
+            
+            .routine-progress-item {
+                padding: 6px;
+                font-size: 11px;
+            }
+            
+            /* Toast */
+            .toast {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: none;
+                font-size: 12px;
+                padding: 12px 15px;
+            }
+            
+            /* Empty states */
+            .empty-state {
+                padding: 30px 15px;
+            }
+            
+            .empty-icon {
+                font-size: 36px;
+                margin-bottom: 10px;
+            }
+            
+            .empty-state p {
+                font-size: 12px;
+            }
+            
+            /* Skip button */
+            #skipItemBtn {
+                font-size: 12px;
+                padding: 10px;
+            }
+        }
+
+        /* Extra small phones (iPhone SE, etc.) */
+        @media (max-width: 375px) {
+            .app-header {
+                height: 50px;
+                padding: 0 10px;
+            }
+            
+            .app-icon {
+                font-size: 20px;
+            }
+            
+            .title-text h1 {
+                font-size: 16px;
+            }
+            
+            .subtitle {
+                font-size: 11px;
+            }
+            
+            .header-actions .btn {
+                padding: 6px 8px;
+                font-size: 10px;
+            }
+            
+            .main-content {
+                padding: 8px;
+            }
+            
+            .tab-button {
+                min-width: 70px;
+                padding: 6px 8px;
+                font-size: 10px;
+            }
+            
+            .timer-display {
+                font-size: 28px;
+            }
+            
+            .timer-display-container {
+                padding: 15px 10px;
+            }
+            
+            .card-header {
+                padding: 12px;
+            }
+            
+            .input-group {
+                padding: 0 12px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .stat-card {
+                padding: 12px;
+            }
+            
+            .stat-value {
+                font-size: 18px;
+            }
+            
+            .goal-current {
+                font-size: 24px;
+            }
+            
+            .modal-content {
+                width: 98vw;
+                margin: 5px;
+            }
+            
+            .toast {
+                font-size: 11px;
+                padding: 10px 12px;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .timer-display {
+                font-size: 24px;
+            }
+            
+            .timer-display-container {
+                padding: 15px;
+            }
+            
+            .timer-controls {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 5px;
+            }
+            
+            .timer-controls .btn {
+                height: 40px;
+                font-size: 12px;
+            }
+            
+            .modal-content {
+                max-height: 85vh;
+            }
+        }
+
+        /* Prevent zoom on input focus (iOS Safari) */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+            select,
+            textarea,
+            input[type="text"],
+            input[type="number"] {
+                font-size: 16px !important;
+            }
+        }
+
+        /* Touch improvements */
+        .btn, .tab-button, .library-tab-btn {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            user-select: none;
+        }
+
+        /* Smooth scrolling for mobile */
+        .items-list,
+        .tab-navigation {
+            -webkit-overflow-scrolling: touch;
         }
     </style>
 </head>
@@ -773,65 +1194,63 @@
         <main class="main-content">
             <!-- Practice Tab -->
             <section id="practice-tab" class="tab-content active">
-                <div class="timer-layout">
-                    <!-- Timer Card -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>⏱️ Practice Timer</h3>
-                            <span id="timerStatus">Ready</span>
-                        </div>
-                        
-                        <div class="timer-display-container">
-                            <div class="timer-display" id="timerDisplay">00:00:00</div>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="practiceItem">What are you practicing?</label>
-                            <select id="practiceItem" class="form-select">
-                                <option value="">Select an item...</option>
-                            </select>
-                        </div>
-
-                        <div class="timer-controls">
-                            <button class="btn btn-success" id="startBtn">
-                                <span>▶️</span>
-                                <span>Start</span>
-                            </button>
-                            <button class="btn btn-warning" id="pauseBtn" disabled>
-                                <span>⏸️</span>
-                                <span>Pause</span>
-                            </button>
-                            <button class="btn btn-danger" id="stopBtn" disabled>
-                                <span>⏹️</span>
-                                <span>Stop</span>
-                            </button>
-                        </div>
+                <!-- Timer Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⏱️ Practice Timer</h3>
+                        <span id="timerStatus">Ready</span>
+                    </div>
+                    
+                    <div class="timer-display-container">
+                        <div class="timer-display" id="timerDisplay">00:00:00</div>
                     </div>
 
-                    <!-- Session Notes -->
-                    <div class="card">
-                        <div class="card-header">
-                            <h3>📝 Session Notes</h3>
-                            <span id="notesStatus"></span>
-                        </div>
-                        <div class="input-group">
-                            <textarea id="sessionNotes" class="form-textarea" rows="6" 
-                                placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
-                        </div>
+                    <div class="input-group">
+                        <label for="practiceItem">What are you practicing?</label>
+                        <select id="practiceItem" class="form-select">
+                            <option value="">Select an item...</option>
+                        </select>
                     </div>
 
-                    <!-- Routine Progress (when practicing routine) -->
-                    <div class="card" id="routineProgressCard" style="display: none;">
-                        <div class="card-header">
-                            <h3>📋 Routine Progress</h3>
-                            <span id="routineProgress">0 / 0</span>
-                        </div>
-                        <div id="routineItemsProgress" style="padding: 0 20px;"></div>
-                        <div style="padding: 0 20px 20px;">
-                            <button class="btn btn-warning" id="skipItemBtn" style="width: 100%;">
-                                ⏭️ Skip Current Item
-                            </button>
-                        </div>
+                    <div class="timer-controls">
+                        <button class="btn btn-success" id="startBtn">
+                            <span>▶️</span>
+                            <span>Start</span>
+                        </button>
+                        <button class="btn btn-warning" id="pauseBtn" disabled>
+                            <span>⏸️</span>
+                            <span>Pause</span>
+                        </button>
+                        <button class="btn btn-danger" id="stopBtn" disabled>
+                            <span>⏹️</span>
+                            <span>Stop</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Routine Progress (when practicing routine) -->
+                <div class="card" id="routineProgressCard" style="display: none;">
+                    <div class="card-header">
+                        <h3>📋 Routine Progress</h3>
+                        <span id="routineProgress">0 / 0</span>
+                    </div>
+                    <div id="routineItemsProgress" style="padding: 0 20px;"></div>
+                    <div style="padding: 0 20px 20px;">
+                        <button class="btn btn-warning" id="skipItemBtn" style="width: 100%;">
+                            ⏭️ Skip Current Item
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Session Notes -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📝 Session Notes</h3>
+                        <span id="notesStatus"></span>
+                    </div>
+                    <div class="input-group">
+                        <textarea id="sessionNotes" class="form-textarea" rows="6" 
+                            placeholder="What did you work on? Any breakthroughs or challenges?"></textarea>
                     </div>
                 </div>
             </section>
